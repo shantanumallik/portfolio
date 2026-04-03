@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+{% block title %}Projects{% endblock %}
+{% block page_title %}Projects{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>Add Project</h2>
+  </div>
+  <form method="POST" action="{{ url_for('admin.project_add') }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Title <span class="req">*</span></label>
+        <input type="text" name="title" required placeholder="Project name" />
+      </div>
+      <div class="form-group">
+        <label>Tagline</label>
+        <input type="text" name="tagline" placeholder="Short description" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description <span class="req">*</span></label>
+      <textarea name="description" required rows="4" placeholder="What does this project do?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Tech Stack (comma-separated)</label>
+      <input type="text" name="tech_stack" placeholder="Python, LangChain, FastAPI" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>GitHub URL</label>
+        <input type="url" name="github_url" placeholder="https://github.com/..." />
+      </div>
+      <div class="form-group">
+        <label>Demo URL</label>
+        <input type="url" name="demo_url" placeholder="https://..." />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="url" name="image_url" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label>Order</label>
+        <input type="number" name="order" value="0" />
+      </div>
+    </div>
+    <div class="form-group form-group--check">
+      <label><input type="checkbox" name="is_featured" /> Featured</label>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Add Project</button>
+    </div>
+  </form>
+</div>
+
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>All Projects ({{ projects | length }})</h2>
+  </div>
+  {% if projects %}
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Title</th><th>Tagline</th><th>Featured</th><th>Order</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr>
+          <td>{{ project.title }}</td>
+          <td>{{ project.tagline or '—' }}</td>
+          <td>{% if project.is_featured %}<span class="status-pill status-pill--read">Yes</span>{% else %}—{% endif %}</td>
+          <td>{{ project.order }}</td>
+          <td class="actions-cell">
+            <a href="{{ url_for('admin.project_edit', project_id=project.id) }}" class="btn-action btn-action--edit">Edit</a>
+            <form method="POST" action="{{ url_for('admin.project_delete', project_id=project.id) }}" style="display:inline"
+                  onsubmit="return confirm('Delete {{ project.title }}?')">
+              <button type="submit" class="btn-action btn-action--delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="empty-state">No projects yet. Add one above.</p>
+  {% endif %}
+</div>
+{% endblock %}

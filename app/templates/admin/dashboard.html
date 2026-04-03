@@ -1,0 +1,76 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stat-row">
+  <div class="stat-tile">
+    <span class="stat-tile__num">{{ stats.projects }}</span>
+    <span class="stat-tile__label">Projects</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-tile__num">{{ stats.skills }}</span>
+    <span class="stat-tile__label">Skills</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-tile__num">{{ stats.experience }}</span>
+    <span class="stat-tile__label">Experience</span>
+  </div>
+  <div class="stat-tile {% if stats.unread > 0 %}stat-tile--alert{% endif %}">
+    <span class="stat-tile__num">{{ stats.unread }}</span>
+    <span class="stat-tile__label">Unread Messages</span>
+  </div>
+</div>
+
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>Quick Actions</h2>
+  </div>
+  <div class="quick-actions">
+    <a href="{{ url_for('admin.about') }}" class="qa-btn">Edit About</a>
+    <a href="{{ url_for('admin.skills') }}" class="qa-btn">Manage Skills</a>
+    <a href="{{ url_for('admin.projects') }}" class="qa-btn">Manage Projects</a>
+    <a href="{{ url_for('admin.experience') }}" class="qa-btn">Manage Experience</a>
+  </div>
+</div>
+
+{% if messages %}
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>Contact Messages</h2>
+    <span class="badge-count">{{ stats.messages }} total · {{ stats.unread }} unread</span>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>Subject</th><th>Received</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in messages %}
+        <tr class="{% if not msg.is_read %}row--unread{% endif %}">
+          <td>{{ msg.name }}</td>
+          <td>{{ msg.email }}</td>
+          <td>{{ msg.subject or '—' }}</td>
+          <td>{{ msg.received_at.strftime('%d %b %Y, %H:%M') }}</td>
+          <td><span class="status-pill {% if msg.is_read %}status-pill--read{% else %}status-pill--unread{% endif %}">{{ 'Read' if msg.is_read else 'Unread' }}</span></td>
+          <td class="actions-cell">
+            {% if not msg.is_read %}
+            <form method="POST" action="{{ url_for('admin.message_read', msg_id=msg.id) }}" style="display:inline">
+              <button type="submit" class="btn-action btn-action--read">Mark Read</button>
+            </form>
+            {% endif %}
+            <form method="POST" action="{{ url_for('admin.message_delete', msg_id=msg.id) }}" style="display:inline"
+                  onsubmit="return confirm('Delete this message?')">
+              <button type="submit" class="btn-action btn-action--delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

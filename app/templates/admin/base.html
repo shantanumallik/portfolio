@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Admin{% endblock %} — Portfolio Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
+</head>
+<body class="admin-body">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__brand">
+      <a href="{{ url_for('admin.dashboard') }}">⚙ Admin</a>
+    </div>
+    <nav class="sidebar__nav">
+      <a href="{{ url_for('admin.dashboard') }}" class="sidebar__link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+        <span class="sidebar__icon">▦</span> Dashboard
+      </a>
+      <a href="{{ url_for('admin.about') }}" class="sidebar__link {% if request.endpoint == 'admin.about' %}active{% endif %}">
+        <span class="sidebar__icon">◉</span> About
+      </a>
+      <a href="{{ url_for('admin.skills') }}" class="sidebar__link {% if request.endpoint in ['admin.skills', 'admin.skill_edit'] %}active{% endif %}">
+        <span class="sidebar__icon">◈</span> Skills
+      </a>
+      <a href="{{ url_for('admin.projects') }}" class="sidebar__link {% if request.endpoint in ['admin.projects', 'admin.project_edit'] %}active{% endif %}">
+        <span class="sidebar__icon">◇</span> Projects
+      </a>
+      <a href="{{ url_for('admin.experience') }}" class="sidebar__link {% if request.endpoint in ['admin.experience', 'admin.experience_edit'] %}active{% endif %}">
+        <span class="sidebar__icon">◎</span> Experience
+      </a>
+      <a href="{{ url_for('admin.settings') }}" class="sidebar__link {% if request.endpoint == 'admin.settings' %}active{% endif %}">
+        <span class="sidebar__icon">◻</span> Settings
+      </a>
+    </nav>
+    <div class="sidebar__footer">
+      <a href="{{ url_for('public.index') }}" class="sidebar__link sidebar__link--muted" target="_blank">↗ View Site</a>
+      <a href="{{ url_for('admin.logout') }}" class="sidebar__link sidebar__link--danger">⏻ Logout</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+      <h1 class="admin-header__title">{% block page_title %}Dashboard{% endblock %}</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="admin-flash-stack">
+          {% for category, message in messages %}
+            <div class="admin-flash admin-flash--{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-content">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

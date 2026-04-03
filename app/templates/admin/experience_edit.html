@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit Experience{% endblock %}
+{% block page_title %}Edit Experience{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <form method="POST" action="{{ url_for('admin.experience_edit', exp_id=exp.id) }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Company <span class="req">*</span></label>
+        <input type="text" name="company" value="{{ exp.company }}" required />
+      </div>
+      <div class="form-group">
+        <label>Role <span class="req">*</span></label>
+        <input type="text" name="role" value="{{ exp.role }}" required />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Start Date <span class="req">*</span></label>
+        <input type="text" name="start_date" value="{{ exp.start_date }}" required />
+      </div>
+      <div class="form-group">
+        <label>End Date</label>
+        <input type="text" name="end_date" value="{{ exp.end_date }}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description <span class="req">*</span></label>
+      <textarea name="description" required rows="5">{{ exp.description }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Technologies (comma-separated)</label>
+        <input type="text" name="technologies" value="{{ exp.technologies }}" />
+      </div>
+      <div class="form-group">
+        <label>Order</label>
+        <input type="number" name="order" value="{{ exp.order }}" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Update Experience</button>
+      <a href="{{ url_for('admin.experience') }}" class="btn btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+{% block title %}Settings{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>Change Password</h2>
+  </div>
+  <form method="POST" action="{{ url_for('admin.settings') }}" class="admin-form" style="max-width:400px">
+    <div class="form-group">
+      <label>Current Password</label>
+      <input type="password" name="current_password" required autocomplete="current-password" />
+    </div>
+    <div class="form-group">
+      <label>New Password</label>
+      <input type="password" name="new_password" required autocomplete="new-password" minlength="8" />
+    </div>
+    <div class="form-group">
+      <label>Confirm New Password</label>
+      <input type="password" name="confirm_password" required autocomplete="new-password" minlength="8" />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Change Password</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

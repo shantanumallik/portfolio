@@ -1,0 +1,79 @@
+{% extends "admin/base.html" %}
+{% block title %}Skills{% endblock %}
+{% block page_title %}Skills{% endblock %}
+
+{% block content %}
+<!-- Add Skill Form -->
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>Add Skill</h2>
+  </div>
+  <form method="POST" action="{{ url_for('admin.skill_add') }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Skill Name <span class="req">*</span></label>
+        <input type="text" name="name" required placeholder="e.g. Python" />
+      </div>
+      <div class="form-group">
+        <label>Category <span class="req">*</span></label>
+        <input type="text" name="category" required placeholder="e.g. Language, Framework, Domain" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Proficiency (0–100)</label>
+        <input type="number" name="proficiency" min="0" max="100" value="80" />
+      </div>
+      <div class="form-group">
+        <label>Order</label>
+        <input type="number" name="order" value="0" />
+      </div>
+    </div>
+    <div class="form-group form-group--check">
+      <label><input type="checkbox" name="is_featured" /> Featured</label>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Add Skill</button>
+    </div>
+  </form>
+</div>
+
+<!-- Skills Table -->
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>All Skills ({{ skills | length }})</h2>
+  </div>
+  {% if skills %}
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Name</th><th>Category</th><th>Proficiency</th><th>Order</th><th>Featured</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for skill in skills %}
+        <tr>
+          <td>{{ skill.name }}</td>
+          <td>{{ skill.category }}</td>
+          <td>
+            <div class="mini-bar"><div class="mini-bar__fill" style="width:{{ skill.proficiency }}%"></div></div>
+            {{ skill.proficiency }}%
+          </td>
+          <td>{{ skill.order }}</td>
+          <td>{% if skill.is_featured %}<span class="status-pill status-pill--read">Yes</span>{% else %}—{% endif %}</td>
+          <td class="actions-cell">
+            <a href="{{ url_for('admin.skill_edit', skill_id=skill.id) }}" class="btn-action btn-action--edit">Edit</a>
+            <form method="POST" action="{{ url_for('admin.skill_delete', skill_id=skill.id) }}" style="display:inline"
+                  onsubmit="return confirm('Delete {{ skill.name }}?')">
+              <button type="submit" class="btn-action btn-action--delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="empty-state">No skills yet. Add one above.</p>
+  {% endif %}
+</div>
+{% endblock %}

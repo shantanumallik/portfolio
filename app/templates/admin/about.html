@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% block title %}About{% endblock %}
+{% block page_title %}About Section{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <form method="POST" action="{{ url_for('admin.about') }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Hero Tagline</label>
+        <input type="text" name="hero_tagline" value="{{ about.hero_tagline }}" required />
+      </div>
+      <div class="form-group">
+        <label>Hero Subtitle</label>
+        <input type="text" name="hero_subtitle" value="{{ about.hero_subtitle }}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea name="bio" rows="5">{{ about.bio }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ about.email }}" placeholder="you@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" name="location" value="{{ about.location }}" placeholder="City, Country" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>LinkedIn URL</label>
+        <input type="url" name="linkedin_url" value="{{ about.linkedin_url }}" placeholder="https://linkedin.com/in/..." />
+      </div>
+      <div class="form-group">
+        <label>GitHub URL</label>
+        <input type="url" name="github_url" value="{{ about.github_url }}" placeholder="https://github.com/..." />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Resume / CV URL</label>
+      <input type="url" name="resume_url" value="{{ about.resume_url }}" placeholder="https://..." />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Save Changes</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
