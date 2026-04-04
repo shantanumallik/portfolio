@@ -79,8 +79,7 @@ with app.app_context():
             (
                 "Ciena", "Software Systems Engineer", "Jan 2025", "Present",
                 (
-                    "Joined as an Engineering Intern and converted to full-time — "
-                    "building the internal platform that validates distributed networking hardware "
+                    "Building the internal platform that validates distributed networking hardware "
                     "operating at up to 1.6 Tbps. "
                     "Design and ship Python-based backend services and REST APIs consumed by Jenkins CI/CD "
                     "pipelines to automate firmware and system-build validation across multiple hardware "
