@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping site
-        run: curl -s -o /dev/null -w "%{http_code}" https://portfolio-1bfa.onrender.com
+        run: curl -s -o /dev/null -w "%{http_code}" https://shantanumallik.com
