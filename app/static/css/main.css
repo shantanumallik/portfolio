@@ -426,6 +426,10 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ── Skills ───────────────────────────────────────────────── */
+.skills-merged {
+  margin-top: 72px;
+}
+
 .skill-group { margin-bottom: 56px; }
 
 .skill-group__title {
@@ -777,25 +781,53 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .about__grid { grid-template-columns: 160px 1fr; grid-template-rows: auto auto; gap: 32px; }
+  .about__stats { grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); }
+}
+
 @media (max-width: 768px) {
   .nav__links { display: none; position: absolute; top: var(--nav-h); left: 0; right: 0; background: rgba(0,0,0,0.97); flex-direction: column; gap: 0; padding: 12px 0; border-bottom: 1px solid var(--border); }
   .nav__links.open { display: flex; }
   .nav__links a { padding: 14px 24px; font-size: 16px; }
   .nav__hamburger { display: flex; }
 
-  .about__grid { grid-template-columns: 1fr; gap: 40px; }
+  .about__grid { grid-template-columns: 1fr; gap: 32px; }
   .about__photo { justify-content: flex-start; }
-  .about__photo-wrap { width: 120px; height: 120px; }
-  .about__stats { grid-template-columns: 1fr 1fr; }
+  .about__photo-wrap { width: 100px; height: 100px; }
+  .about__stats { grid-column: auto; grid-template-columns: 1fr 1fr; }
+  .about__bio p { font-size: 16px; }
+
+  .skills-merged { margin-top: 40px; }
+
+  .section { padding: 72px 0; }
+  .section__header { margin-bottom: 48px; }
+
+  .timeline { padding-left: 28px; }
+  .timeline__card { padding: 20px 18px; }
+  .timeline__role { font-size: 17px; }
+  .timeline__dot { left: -23px; }
+  .timeline::before { left: 7px; }
+
   .contact__grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact__email { font-size: 1.2rem; }
   .form-row { grid-template-columns: 1fr; }
-  .section { padding: 80px 0; }
+
+  .flash-container { right: 12px; left: 12px; }
+  .flash { font-size: 13px; }
+
+  .footer__inner { flex-direction: column; align-items: flex-start; }
 }
 
 @media (max-width: 480px) {
   .hero__ctas { flex-direction: column; align-items: stretch; }
   .projects-grid { grid-template-columns: 1fr; }
-  .about__stats { grid-template-columns: 1fr; }
+  .about__stats { grid-template-columns: 1fr 1fr; }
+  .stat-card { padding: 20px 16px; }
+  .stat-card__number { font-size: 1.8rem; }
+  .section { padding: 56px 0; }
+  .section__title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+  .hero__name { font-size: 1rem; }
 }
 
 
