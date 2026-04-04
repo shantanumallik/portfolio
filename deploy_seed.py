@@ -20,13 +20,15 @@ with app.app_context():
         about = About()
         db.session.add(about)
 
-    about.hero_tagline  = "I build systems that automate the hard parts and let AI handle the rest."
+    about.hero_tagline  = "Software Systems Engineer at Ciena — building automation platforms and agentic AI systems for distributed networking infrastructure."
     about.hero_subtitle = "Python · Agentic AI · Distributed Systems · Backend Engineering"
     about.bio = (
-        "SVT/PV Engineer at Ciena, working at the intersection of Python automation and Agentic AI. "
-        "The focus: validation platforms and intelligent failure-triage systems for optical networking "
-        "products running at 1.6 Tbps. If a process can be automated or a failure can be reasoned about "
-        "by a machine, that's where the work happens."
+        "Software Systems Engineer at Ciena, designing and shipping the internal platform that validates "
+        "distributed optical networking hardware at 1.6 Tbps scale. My work spans Python backend services, "
+        "REST APIs integrated into Jenkins CI/CD pipelines, and agentic AI workflows built with LangChain "
+        "and LangGraph — systems that replace manual engineering effort with structured, machine-driven "
+        "reasoning. Previously a Research Engineer at IIIT Delhi's Complex Systems Laboratory, and four "
+        "years as a freelance backend developer shipping production systems to 50,000+ users."
     )
     about.location     = "Gurugram, Haryana, India"
     about.email        = "me@shantanumallik.com"
@@ -80,15 +82,14 @@ with app.app_context():
                 "Ciena", "Software Systems Engineer", "Jan 2025", "Present",
                 (
                     "Building the internal platform that validates distributed networking hardware "
-                    "operating at up to 1.6 Tbps. "
-                    "Design and ship Python-based backend services and REST APIs consumed by Jenkins CI/CD "
-                    "pipelines to automate firmware and system-build validation across multiple hardware "
-                    "variants — reducing manual testing effort by ~40–50%. "
-                    "Developed AI-assisted failure triaging workflows: an agentic system (LangChain/LangGraph) "
-                    "that ingests raw test failures, clusters root causes using LLM reasoning, and delivers "
-                    "structured debugging summaries — compressing triage time from hours to minutes. "
-                    "Architected Grafana dashboards surfacing build-execution trends, test stability signals, "
-                    "and platform-health KPIs for engineering leadership."
+                    "operating at up to 1.6 Tbps. Design and ship Python-based backend services and "
+                    "REST APIs consumed by Jenkins CI/CD pipelines — automating firmware and system-build "
+                    "validation across multiple hardware variants and reducing manual testing effort by 40–50%. "
+                    "Developed an agentic failure triaging system using LangChain and LangGraph that ingests "
+                    "raw test failures, clusters root causes via LLM reasoning chains, and delivers structured "
+                    "debugging summaries — compressing triage time from hours to minutes. Architected Grafana "
+                    "dashboards surfacing build-execution trends, test stability signals, and platform health "
+                    "KPIs for engineering leadership."
                 ),
                 "Python, LangChain, LangGraph, REST APIs, Jenkins, Grafana, TestRail, CI/CD, Git, Linux",
                 0,
@@ -96,11 +97,12 @@ with app.app_context():
             (
                 "Complex Systems Laboratory / Foodoscope", "Research Intern", "Jan 2024", "Jan 2025",
                 (
-                    "Research Assistant at IIIT Delhi's Complex Systems Lab, building backend systems "
+                    "Research Engineer at IIIT Delhi's Complex Systems Laboratory, building backend systems "
                     "and data APIs for large-scale food, nutrition, and health knowledge bases. "
-                    "FlavorDB — APIs for 934 natural ingredients and their flavour-molecule compositions. "
-                    "RecipeDB — data pipelines and querying layer for 118,000+ recipes spanning 26 global regions. "
-                    "DietRx — backend linking dietary ingredients to clinical therapeutic evidence."
+                    "FlavorDB: data models and retrieval APIs for 934 natural ingredients and their "
+                    "flavour-molecule compositions. RecipeDB: data pipelines and querying layer for "
+                    "118,000+ recipes spanning 26 global regions. DietRx: a backend system linking "
+                    "dietary ingredients to peer-reviewed therapeutic evidence."
                 ),
                 "Python, REST APIs, Data Modeling, Data Pipeline Design, PostgreSQL",
                 1,
@@ -108,11 +110,11 @@ with app.app_context():
             (
                 "Freelance", "Software Engineer", "Apr 2019", "Apr 2023",
                 (
-                    "Four years of end-to-end ownership across backend, APIs, database design, and "
-                    "cloud deployment for startups and enterprise clients. "
-                    "Delivered production-grade Python and Ruby on Rails systems serving 50,000+ active users. "
-                    "Built automation-heavy APIs that eliminated ~95% of manual processing effort for clients. "
-                    "Managed full deployment pipelines on GCP and Heroku."
+                    "Four years of end-to-end backend engineering delivery across startup and enterprise "
+                    "engagements. Designed and shipped production-grade Python and Ruby on Rails systems "
+                    "serving 50,000+ active users. Built automation-focused APIs that eliminated approximately "
+                    "95% of clients' manual processing workloads. Managed full deployment pipelines on GCP "
+                    "and Heroku, from schema design through production release."
                 ),
                 "Python, Flask, Ruby on Rails, REST APIs, PostgreSQL, Git, Linux, GCP, Heroku, CI/CD",
                 2,
@@ -124,19 +126,54 @@ with app.app_context():
                 start_date=start, end_date=end,
                 description=desc, technologies=tech, order=order
             ))
+    else:
+        # Update existing experience descriptions
+        updates = {
+            1: (
+                "Building the internal platform that validates distributed networking hardware "
+                "operating at up to 1.6 Tbps. Design and ship Python-based backend services and "
+                "REST APIs consumed by Jenkins CI/CD pipelines — automating firmware and system-build "
+                "validation across multiple hardware variants and reducing manual testing effort by 40–50%. "
+                "Developed an agentic failure triaging system using LangChain and LangGraph that ingests "
+                "raw test failures, clusters root causes via LLM reasoning chains, and delivers structured "
+                "debugging summaries — compressing triage time from hours to minutes. Architected Grafana "
+                "dashboards surfacing build-execution trends, test stability signals, and platform health "
+                "KPIs for engineering leadership."
+            ),
+            2: (
+                "Research Engineer at IIIT Delhi's Complex Systems Laboratory, building backend systems "
+                "and data APIs for large-scale food, nutrition, and health knowledge bases. "
+                "FlavorDB: data models and retrieval APIs for 934 natural ingredients and their "
+                "flavour-molecule compositions. RecipeDB: data pipelines and querying layer for "
+                "118,000+ recipes spanning 26 global regions. DietRx: a backend system linking "
+                "dietary ingredients to peer-reviewed therapeutic evidence."
+            ),
+            3: (
+                "Four years of end-to-end backend engineering delivery across startup and enterprise "
+                "engagements. Designed and shipped production-grade Python and Ruby on Rails systems "
+                "serving 50,000+ active users. Built automation-focused APIs that eliminated approximately "
+                "95% of clients' manual processing workloads. Managed full deployment pipelines on GCP "
+                "and Heroku, from schema design through production release."
+            ),
+        }
+        for exp_id, desc in updates.items():
+            exp = db.session.get(Experience, exp_id)
+            if exp:
+                exp.description = desc
 
     # ── PROJECTS ───────────────────────────────────────────────────────────────
     if Project.query.count() == 0:
         projects = [
             (
                 "Agentic Failure Triage System",
-                "LLM-powered root-cause clustering for CI/CD test failures",
+                "LLM-powered root-cause analysis for CI/CD test failures at scale",
                 (
-                    "Built at Ciena to tackle the hardest part of large-scale hardware validation: "
-                    "making sense of thousands of test failures per build cycle. "
-                    "An agentic workflow ingests structured failure logs from Jenkins CI/CD runs, "
-                    "uses LangGraph to orchestrate multi-step LLM reasoning chains, and produces "
-                    "clustered root-cause summaries with confidence scores and suggested fix paths."
+                    "Built at Ciena to address a core challenge in large-scale hardware validation: "
+                    "extracting signal from thousands of test failures per build cycle. An agentic workflow "
+                    "ingests structured failure logs from Jenkins CI/CD runs, uses LangGraph to orchestrate "
+                    "multi-step LLM reasoning chains, and produces clustered root-cause summaries with "
+                    "confidence scores and suggested remediation paths — compressing engineer triage time "
+                    "from hours to minutes."
                 ),
                 "Python, LangChain, LangGraph, OpenAI, Jenkins, REST APIs, Git",
                 "", "", "", True, 0,
@@ -186,6 +223,40 @@ with app.app_context():
                 tech_stack=tech, github_url=github, demo_url=demo,
                 image_url=image, is_featured=featured, order=order
             ))
+    else:
+        # Update existing project descriptions and taglines
+        proj_updates = {
+            1: ("LLM-powered root-cause analysis for CI/CD test failures at scale",
+                "Built at Ciena to address a core challenge in large-scale hardware validation: "
+                "extracting signal from thousands of test failures per build cycle. An agentic workflow "
+                "ingests structured failure logs from Jenkins CI/CD runs, uses LangGraph to orchestrate "
+                "multi-step LLM reasoning chains, and produces clustered root-cause summaries with "
+                "confidence scores and suggested remediation paths — compressing engineer triage time "
+                "from hours to minutes."),
+            2: ("Backend platform orchestrating distributed systems validation at 1.6 Tbps",
+                "Core contributor to Ciena's internal developer platform — a Python service layer that "
+                "orchestrates automated firmware and system-build validation across distributed networking "
+                "hardware. Exposes REST APIs consumed by Jenkins CI/CD pipelines to trigger, monitor, and "
+                "report on test runs across multiple hardware variants, reducing manual validation effort "
+                "by 40–50%."),
+            3: ("Research data APIs powering 118,000+ recipes and a 934-ingredient flavour knowledge base",
+                "At the Complex Systems Laboratory, IIIT Delhi, built the backend data services underpinning "
+                "two large-scale research knowledge bases. RecipeDB: a queryable API over 118,000+ recipes "
+                "across 26 global regions. FlavorDB: data models and retrieval APIs for 934 natural "
+                "ingredients and their flavour-molecule profiles, used by food scientists and researchers "
+                "internationally."),
+            4: ("Production APIs and backend systems scaled to 50,000+ active users",
+                "Four years of independent backend engineering across startup and enterprise engagements. "
+                "Designed and shipped production-grade Python and Flask backends from schema design through "
+                "cloud deployment. Built automation-focused APIs that eliminated approximately 95% of "
+                "clients' manual processing workloads. Systems deployed on GCP and Heroku, collectively "
+                "serving 50,000+ active users in production."),
+        }
+        for proj_id, (tagline, desc) in proj_updates.items():
+            proj = db.session.get(Project, proj_id)
+            if proj:
+                proj.tagline = tagline
+                proj.description = desc
 
     db.session.commit()
     print("Content seeded.")
