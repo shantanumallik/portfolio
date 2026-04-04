@@ -177,6 +177,16 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
 }
 
+.hero__name {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
 .hero__eyebrow {
   font-size: 13px;
   font-weight: 600;
