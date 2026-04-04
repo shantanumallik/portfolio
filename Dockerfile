@@ -16,13 +16,16 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy app code
 COPY . .
 
-# Expose port (Fly.io expects 8080)
+# Make entrypoint executable
+RUN chmod +x entrypoint.sh
+
+# Expose port
 EXPOSE 8080
 
-# Set environment variables for Flask
+# Environment
 ENV FLASK_APP=run.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=8080
+ENV FLASK_ENV=production
+ENV PORT=8080
 
-# Run the app
-CMD ["flask", "run"]
+# Seed DB and start server
+ENTRYPOINT ["./entrypoint.sh"]
