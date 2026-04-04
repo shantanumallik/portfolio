@@ -71,7 +71,7 @@
 {% endwith %}
 
 <!-- ── ABOUT ─────────────────────────────────────────────────────────────── -->
-<section class="section section--dark" id="about">
+<section class="section section--dark section--pb-sm" id="about">
   <div class="container">
     <div class="section__header reveal">
       <p class="section__kicker">WHO AM I</p>
@@ -127,6 +127,7 @@
     </div>
 
     <div class="skills-merged reveal">
+    <h3 class="skills-merged__heading">What's in the toolkit.</h3>
     {% if skills_by_category %}
       {% for category, skill_list in skills_by_category.items() %}
       <div class="skill-group reveal">
@@ -208,7 +209,7 @@
 </section>
 
 <!-- ── PROJECTS ───────────────────────────────────────────────────────────── -->
-<section class="section section--dark" id="projects">
+<section class="section section--dark section--pt-sm" id="projects">
   <div class="container">
     <div class="section__header reveal">
       <p class="section__kicker">WORK</p>
