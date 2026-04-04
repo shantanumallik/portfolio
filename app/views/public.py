@@ -1,3 +1,6 @@
+import os
+import smtplib
+from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from app.controllers import content as content_ctrl
 
@@ -35,5 +38,28 @@ def contact():
     content_ctrl.save_contact_message(
         {"name": name, "email": email, "subject": subject, "message": message}
     )
+
+    # Email notification
+    try:
+        mail_user = os.environ.get("MAIL_USER")
+        mail_pass = os.environ.get("MAIL_PASSWORD")
+        if mail_user and mail_pass:
+            body = (
+                f"Name: {name}\n"
+                f"Email: {email}\n"
+                f"Subject: {subject or '(none)'}\n\n"
+                f"{message}"
+            )
+            msg = MIMEText(body)
+            msg["Subject"] = f"Portfolio contact: {subject or name}"
+            msg["From"] = mail_user
+            msg["To"] = "me@shantanumallik.com"
+            with smtplib.SMTP("smtp.gmail.com", 587) as server:
+                server.starttls()
+                server.login(mail_user, mail_pass)
+                server.sendmail(mail_user, "me@shantanumallik.com", msg.as_string())
+    except Exception:
+        pass  # Don't break form submission if email fails
+
     flash("Message sent! I'll get back to you soon.", "success")
     return redirect(url_for("public.index") + "#contact")
