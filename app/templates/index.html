@@ -36,22 +36,29 @@
 <!-- ── HERO ──────────────────────────────────────────────────────────────── -->
 <section class="hero" id="hero">
   <canvas class="hero__canvas" id="hero-canvas"></canvas>
-  <div class="hero__content">
-    <p class="hero__name reveal">Shantanu Mallik</p>
-    <p class="hero__eyebrow reveal">SVT / PV Engineer · Ciena</p>
-    <h1 class="hero__title reveal">
-      {{ about.hero_tagline }}
-    </h1>
-    <p class="hero__subtitle reveal">{{ about.hero_subtitle }}</p>
-    <div class="hero__chips reveal">
-      <span class="chip">Python</span>
-      <span class="chip">Agentic AI</span>
-      <span class="chip">Automation</span>
-      <span class="chip">LLMs</span>
+  <div class="hero__split reveal">
+    <div class="hero__photo-col">
+      <div class="hero__photo-wrap">
+        <img src="{{ url_for('static', filename='images/shantanu.jpg') }}"
+             alt="Shantanu Mallik"
+             class="hero__photo-img"
+             onerror="this.parentElement.classList.add('hero__photo-wrap--fallback')" />
+      </div>
     </div>
-    <div class="hero__ctas reveal">
-      <a href="#projects" class="btn btn--primary">View Work</a>
-      <a href="#contact" class="btn btn--ghost">Get In Touch</a>
+    <div class="hero__text-col">
+      <p class="hero__eyebrow">SVT / PV Engineer · Ciena</p>
+      <h1 class="hero__name">Shantanu Mallik</h1>
+      <p class="hero__subtitle">{{ about.hero_tagline or "I build systems that think and platforms that scale." }}</p>
+      <div class="hero__chips">
+        <span class="chip">Python</span>
+        <span class="chip">Agentic AI</span>
+        <span class="chip">Automation</span>
+        <span class="chip">LLMs</span>
+      </div>
+      <div class="hero__ctas">
+        <a href="#projects" class="btn btn--primary">View Work</a>
+        <a href="#contact" class="btn btn--ghost">Get In Touch</a>
+      </div>
     </div>
   </div>
   <div class="hero__scroll-hint">
@@ -77,15 +84,7 @@
       <p class="section__kicker">WHO AM I</p>
       <h2 class="section__title">The work, the stack,<br>and the person behind it.</h2>
     </div>
-    <div class="about__grid">
-      <div class="about__photo reveal">
-        <div class="about__photo-wrap">
-          <img src="{{ url_for('static', filename='images/shantanu.jpg') }}"
-               alt="Shantanu Mallik"
-               class="about__photo-img"
-               onerror="this.parentElement.classList.add('about__photo-wrap--fallback')" />
-        </div>
-      </div>
+    <div class="about__grid about__grid--no-photo">
       <div class="about__bio reveal">
         <p>{{ about.bio or "I automate the hard parts and build AI systems that reason. At Ciena, I ship Python-driven validation platforms and agentic failure-triage workflows that replace manual effort with intelligence — at 1.6 Tbps scale. I work at the intersection of systems engineering and AI: where reliability is non-negotiable and automation is the only logical path forward." }}</p>
         <div class="about__links">
