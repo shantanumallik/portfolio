@@ -11,7 +11,7 @@ with app.app_context():
 
     # ── ABOUT ──────────────────────────────────────────────────────────────────
     about = About.query.first() or About()
-    about.hero_tagline   = "I build systems that think."
+    about.hero_tagline   = "I build systems that automate the hard parts and let AI handle the rest."
     about.hero_subtitle  = "Python · Agentic AI · Distributed Systems · Backend Engineering"
     about.bio = (
         "I am a versatile software engineer whose work spans backend platform engineering, "

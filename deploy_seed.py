@@ -20,7 +20,7 @@ with app.app_context():
         about = About()
         db.session.add(about)
 
-    about.hero_tagline  = "Automate everything. Make AI do the rest."
+    about.hero_tagline  = "I build systems that automate the hard parts and let AI handle the rest."
     about.hero_subtitle = "Python · Agentic AI · Distributed Systems · Backend Engineering"
     about.bio = (
         "SVT/PV Engineer at Ciena, working at the intersection of Python automation and Agentic AI. "
