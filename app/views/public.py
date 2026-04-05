@@ -34,6 +34,11 @@ def experience():
     return render_template("experience.html", experience=experience)
 
 
+@public_bp.route("/beyond")
+def beyond():
+    return render_template("beyond.html")
+
+
 @public_bp.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "GET":

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Beyond the Code — Shantanu Mallik{% endblock %}
+
+{% block page_content %}
+
+<!-- ── Page Title ─────────────────────────────────────────────────────────── -->
+<div class="about-page-title">
+  <div class="about-page-title__inner">
+    <p class="section__kicker anim-kicker" style="margin-bottom:20px;">BEYOND THE CODE</p>
+    <h1 class="about-page-title__h1 anim-title">When I close the laptop,<br>this is what I find.</h1>
+    <p class="beyond-lead anim-subtitle">Life in the margins — mountains, music, and wandering.</p>
+  </div>
+</div>
+
+<!-- ── Gallery ───────────────────────────────────────────────────────────── -->
+<section class="section section--black" id="gallery">
+  <div class="container">
+    <div class="scrapbook">
+      <div class="scrapbook__grid">
+        <div class="scrapbook__item scrapbook__item--1 reveal">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_7068.jpg') }}" alt="Hiking" loading="lazy" />
+            <p class="scrapbook__caption">Peaks &amp; silence ↑</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--2 reveal" data-delay="0.08">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2033.jpg') }}" alt="Mountains" loading="lazy" />
+            <p class="scrapbook__caption">Himalayan horizon</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--3 reveal" data-delay="0.16">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2484.jpg') }}" alt="Guitar" loading="lazy" />
+            <p class="scrapbook__caption">Rooftop sessions 🎸</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--4 reveal" data-delay="0.24">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2890.jpg') }}" alt="Buddha" loading="lazy" />
+            <p class="scrapbook__caption">Somewhere high up</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--5 reveal" data-delay="0.32">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2494.jpg') }}" alt="Prayer wheel" loading="lazy" />
+            <p class="scrapbook__caption">Tibetan Buddhist Temple, Mussoorie</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--6 reveal" data-delay="0.4">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2529.jpg') }}" alt="Prayer flags" loading="lazy" />
+            <p class="scrapbook__caption">Prayer flags, Mussoorie</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── What I'm Into ─────────────────────────────────────────────────────── -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__kicker">WHAT KEEPS ME ALIVE OUTSIDE WORK</p>
+      <h2 class="section__title">A few things I do obsessively.</h2>
+    </div>
+
+    <div class="beyond-grid reveal">
+
+      <div class="beyond-card">
+        <div class="beyond-card__icon">⛰</div>
+        <h3 class="beyond-card__title">Hiking</h3>
+        <p class="beyond-card__desc">Mountains are the only place I find the same clarity I get from a well-designed system. The goal is obvious. The path is not. I've trekked the Himalayas, and I'm always planning the next one.</p>
+      </div>
+
+      <div class="beyond-card">
+        <div class="beyond-card__icon">🎸</div>
+        <h3 class="beyond-card__title">Guitar</h3>
+        <p class="beyond-card__desc">I play often enough to improve slowly, poorly enough to stay humble. There's something in tracing why a chord progression doesn't resolve that feels a lot like debugging. I do it anyway.</p>
+      </div>
+
+      <div class="beyond-card">
+        <div class="beyond-card__icon">📷</div>
+        <h3 class="beyond-card__title">Photography</h3>
+        <p class="beyond-card__desc">Mostly landscapes and light. I moved from phone shots to something more deliberate — paying attention to what a scene looks like before I frame it, rather than after.</p>
+      </div>
+
+      <div class="beyond-card">
+        <div class="beyond-card__icon">🧭</div>
+        <h3 class="beyond-card__title">Wandering</h3>
+        <p class="beyond-card__desc">Buddhist temples in Mussoorie, rooftop sessions in the hills, random detours with no agenda. Some of my best ideas arrived in places I had no reason to be.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+{% endblock %}
