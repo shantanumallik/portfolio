@@ -51,9 +51,8 @@
           <label for="message">Message <span class="req">*</span></label>
           <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project or idea..."></textarea>
         </div>
-        <div class="form-group captcha-group">
-          <label for="captcha_answer">Quick check: what is <strong>{{ captcha_q }}</strong>? <span class="req">*</span></label>
-          <input type="number" id="captcha_answer" name="captcha_answer" required placeholder="Answer" style="max-width:120px;" />
+        <div class="form-group">
+          <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" data-theme="dark"></div>
         </div>
         <button type="submit" class="btn btn--primary btn--full">Send Message →</button>
       </form>
@@ -62,5 +61,6 @@
 </section>
 
 <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>document.getElementById('_form_time').value = Date.now().toString();</script>
 {% endblock %}
