@@ -34,9 +34,9 @@
             {% set paras = about.bio.split('\n\n') %}
             {% for para in paras %}
               {% if loop.index == 2 %}
-                <div class="about-callout reveal" data-delay="{{ '0.' ~ loop.index }}">{{ para }}</div>
+                <div class="about-callout reveal" data-delay="{{ '0.' ~ loop.index }}">{{ para | safe }}</div>
               {% else %}
-                <p class="reveal" data-delay="{{ '0.' ~ loop.index }}">{{ para }}</p>
+                <p class="reveal" data-delay="{{ '0.' ~ loop.index }}">{{ para | safe }}</p>
               {% endif %}
             {% endfor %}
           {% else %}
