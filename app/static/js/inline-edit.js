@@ -159,6 +159,9 @@
         case 'edit-skill':   openEditSkill(id, btn.closest('[data-skill-id]'));   break;
         case 'delete-skill': confirmDeleteSkill(id, btn.closest('[data-skill-id]')); break;
         case 'add-skill':    openAddSkill();                                       break;
+        case 'edit-beyond':   openEditBeyond(id, btn.closest('[data-card-id]'));   break;
+        case 'delete-beyond': confirmDeleteBeyond(id, btn.closest('[data-card-id]')); break;
+        case 'add-beyond':    openAddBeyond();                                     break;
       }
     });
   }
@@ -483,6 +486,74 @@
     if (bioEl) bioEl.textContent = d.bio;
     if (emailEl && d.email) { emailEl.textContent = d.email; emailEl.href = 'mailto:' + d.email; }
     if (locEl && d.location) locEl.textContent = '📍 ' + d.location;
+  }
+
+  // ── BEYOND CARDS ───────────────────────────────────────────────────────────
+  function beyondFields(d) {
+    return [
+      { name: 'icon',        label: 'Icon (emoji)',   value: d.icon || '🌍' },
+      { name: 'title',       label: 'Title',          value: d.title || '' },
+      { name: 'description', label: 'Description', type: 'textarea', rows: 4, value: d.description || '' },
+    ];
+  }
+
+  function openEditBeyond(id, cardEl) {
+    api('GET', '/admin/api/beyond/' + id).then(function (d) {
+      openModal('Edit Card — ' + d.title, beyondFields(d), async function () {
+        try {
+          const result = await api('PUT', '/admin/api/beyond/' + id, getFormData());
+          if (result.ok) { updateBeyondCard(cardEl, result.data); closeModal(); }
+        } catch (err) { alert('Save failed: ' + err.message); }
+      });
+    });
+  }
+
+  function openAddBeyond() {
+    openModal('Add Card', beyondFields({}), async function () {
+      try {
+        const result = await api('POST', '/admin/api/beyond', getFormData());
+        if (result.ok) {
+          const el = buildBeyondCard(result.data);
+          const grid = document.querySelector('.beyond-grid');
+          const addRow = document.getElementById('ie-add-beyond-row');
+          if (addRow) addRow.before(el);
+          else if (grid) grid.appendChild(el);
+          triggerReveal(el);
+          closeModal();
+        }
+      } catch (err) { alert('Save failed: ' + err.message); }
+    });
+  }
+
+  function confirmDeleteBeyond(id, cardEl) {
+    if (!confirm('Delete this card?')) return;
+    api('DELETE', '/admin/api/beyond/' + id).then(function (r) {
+      if (r.ok) cardEl.remove();
+    }).catch(function (err) { alert('Delete failed: ' + err.message); });
+  }
+
+  function updateBeyondCard(cardEl, d) {
+    const iconEl = cardEl.querySelector('.beyond-card__icon');
+    const titleEl = cardEl.querySelector('.beyond-card__title');
+    const descEl = cardEl.querySelector('.beyond-card__desc');
+    if (iconEl) iconEl.textContent = d.icon;
+    if (titleEl) titleEl.textContent = d.title;
+    if (descEl) descEl.textContent = d.description;
+  }
+
+  function buildBeyondCard(d) {
+    const el = document.createElement('div');
+    el.className = 'beyond-card';
+    el.dataset.cardId = d.id;
+    el.innerHTML =
+      '<div class="ie-card-controls">' +
+        '<button class="ie-card-btn ie-card-btn--edit" data-action="edit-beyond" data-id="' + d.id + '">✏</button>' +
+        '<button class="ie-card-btn ie-card-btn--delete" data-action="delete-beyond" data-id="' + d.id + '">✕</button>' +
+      '</div>' +
+      '<div class="beyond-card__icon">' + esc(d.icon) + '</div>' +
+      '<h3 class="beyond-card__title">' + esc(d.title) + '</h3>' +
+      '<p class="beyond-card__desc">' + esc(d.description) + '</p>';
+    return el;
   }
 
   // ── Utilities ──────────────────────────────────────────────────────────────

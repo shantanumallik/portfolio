@@ -2,6 +2,10 @@
 
 {% block title %}Beyond the Code — Shantanu Mallik{% endblock %}
 
+{% block admin_extra_btns %}
+<button class="ie-admin-bar__btn ie-admin-bar__btn--primary" id="ie-toggle-edit">✏ Enable Editing</button>
+{% endblock %}
+
 {% block page_content %}
 
 <!-- ── Page Title ─────────────────────────────────────────────────────────── -->
@@ -70,12 +74,23 @@
 
       {% if cards %}
         {% for card in cards %}
-        <div class="beyond-card">
+        <div class="beyond-card" data-card-id="{{ card.id }}">
+          {% if current_user.is_authenticated %}
+          <div class="ie-card-controls">
+            <button class="ie-card-btn ie-card-btn--edit" data-action="edit-beyond" data-id="{{ card.id }}">✏</button>
+            <button class="ie-card-btn ie-card-btn--delete" data-action="delete-beyond" data-id="{{ card.id }}">✕</button>
+          </div>
+          {% endif %}
           <div class="beyond-card__icon">{{ card.icon }}</div>
           <h3 class="beyond-card__title">{{ card.title }}</h3>
           <p class="beyond-card__desc">{{ card.description }}</p>
         </div>
         {% endfor %}
+        {% if current_user.is_authenticated %}
+        <div class="ie-add-row" id="ie-add-beyond-row">
+          <button class="ie-add-btn" data-action="add-beyond">＋ Add Card</button>
+        </div>
+        {% endif %}
       {% else %}
 
       <div class="beyond-card">
@@ -109,4 +124,25 @@
 </section>
 
 <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+{% endblock %}
+
+{% block extra_js %}
+{% if current_user.is_authenticated %}
+<div class="ie-overlay" id="ie-overlay" aria-hidden="true">
+  <div class="ie-modal" role="dialog" aria-labelledby="ie-modal-title">
+    <div class="ie-modal__header">
+      <h2 class="ie-modal__title" id="ie-modal-title">Edit</h2>
+      <button class="ie-modal__close" id="ie-modal-close" aria-label="Close">✕</button>
+    </div>
+    <form class="ie-modal__form" id="ie-modal-form" autocomplete="off" novalidate>
+      <div class="ie-modal__body" id="ie-modal-fields"></div>
+      <div class="ie-modal__footer">
+        <button type="button" class="btn btn--ghost btn--sm" id="ie-modal-cancel">Cancel</button>
+        <button type="submit" class="btn btn--primary btn--sm" id="ie-modal-save">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/inline-edit.js') }}"></script>
+{% endif %}
 {% endblock %}

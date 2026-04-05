@@ -392,3 +392,59 @@ def beyond_delete(card_id):
     db.session.commit()
     flash("Card deleted.", "success")
     return redirect(url_for("admin.beyond"))
+
+
+# ── Beyond Cards JSON API ──────────────────────────────────────────────────────
+
+def _beyond_dict(c):
+    return {"id": c.id, "icon": c.icon, "title": c.title, "description": c.description, "order": c.order}
+
+
+@admin_bp.route("/api/beyond", methods=["POST"])
+@login_required
+def api_beyond_add():
+    from app import db
+    data = request.get_json(force=True) or {}
+    cards = BeyondCard.query.order_by(BeyondCard.order).all()
+    next_order = (cards[-1].order + 10) if cards else 10
+    card = BeyondCard(
+        icon=data.get("icon", "🌍").strip(),
+        title=data.get("title", "").strip(),
+        description=data.get("description", "").strip(),
+        order=int(data.get("order", next_order)),
+    )
+    db.session.add(card)
+    db.session.commit()
+    return jsonify({"ok": True, "data": _beyond_dict(card)}), 201
+
+
+@admin_bp.route("/api/beyond/<int:card_id>", methods=["GET", "PUT", "DELETE"])
+@login_required
+def api_beyond_item(card_id):
+    from app import db
+    card = BeyondCard.query.get_or_404(card_id)
+    if request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+        return jsonify({"ok": True})
+    if request.method == "PUT":
+        data = request.get_json(force=True) or {}
+        card.icon = data.get("icon", card.icon).strip()
+        card.title = data.get("title", card.title).strip()
+        card.description = data.get("description", card.description).strip()
+        db.session.commit()
+        return jsonify({"ok": True, "data": _beyond_dict(card)})
+    return jsonify(_beyond_dict(card))
+
+
+@admin_bp.route("/api/beyond/reorder", methods=["POST"])
+@login_required
+def api_beyond_reorder():
+    from app import db
+    ids = (request.get_json(force=True) or {}).get("ids", [])
+    for i, card_id in enumerate(ids):
+        card = BeyondCard.query.get(card_id)
+        if card:
+            card.order = (i + 1) * 10
+    db.session.commit()
+    return jsonify({"ok": True})

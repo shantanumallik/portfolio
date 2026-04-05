@@ -18,53 +18,150 @@
         <label>Title <span class="req">*</span></label>
         <input type="text" name="title" required placeholder="e.g. Hiking" />
       </div>
-      <div class="form-group">
-        <label>Order</label>
-        <input type="number" name="order" value="{{ (cards | length) * 10 }}" />
-      </div>
     </div>
     <div class="form-group">
       <label>Description <span class="req">*</span></label>
       <textarea name="description" required rows="3" placeholder="A short description of this interest..."></textarea>
     </div>
+    <input type="hidden" name="order" value="{{ (cards | length + 1) * 10 }}" />
     <div class="form-actions">
       <button type="submit" class="btn btn--primary">Add Card</button>
     </div>
   </form>
 </div>
 
-<!-- Cards Table -->
+<!-- Cards Grid (drag to reorder) -->
 <div class="admin-section">
   <div class="admin-section__header">
     <h2>All Cards ({{ cards | length }})</h2>
+    <p style="font-size:0.8rem;color:#71717a;margin-top:0.25rem;">Drag cards to reorder. Changes save automatically.</p>
   </div>
   {% if cards %}
-  <div class="table-wrap">
-    <table class="admin-table">
-      <thead>
-        <tr><th>Icon</th><th>Title</th><th>Description</th><th>Order</th><th>Actions</th></tr>
-      </thead>
-      <tbody>
-        {% for card in cards %}
-        <tr>
-          <td style="font-size:1.5rem">{{ card.icon }}</td>
-          <td>{{ card.title }}</td>
-          <td>{{ card.description[:80] }}{% if card.description | length > 80 %}…{% endif %}</td>
-          <td>{{ card.order }}</td>
-          <td class="actions-cell">
-            <a href="{{ url_for('admin.beyond_edit', card_id=card.id) }}" class="btn-action btn-action--edit">Edit</a>
-            <form method="POST" action="{{ url_for('admin.beyond_delete', card_id=card.id) }}" style="display:inline"
-                  onsubmit="return confirm('Delete {{ card.title }}?')">
-              <button type="submit" class="btn-action btn-action--delete">Delete</button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="beyond-admin-grid" id="beyond-sortable">
+    {% for card in cards %}
+    <div class="beyond-admin-card" data-id="{{ card.id }}">
+      <div class="beyond-admin-card__drag" title="Drag to reorder">⠿</div>
+      <div class="beyond-admin-card__icon">{{ card.icon }}</div>
+      <div class="beyond-admin-card__body">
+        <h3 class="beyond-admin-card__title">{{ card.title }}</h3>
+        <p class="beyond-admin-card__desc">{{ card.description[:100] }}{% if card.description | length > 100 %}…{% endif %}</p>
+      </div>
+      <div class="beyond-admin-card__actions">
+        <a href="{{ url_for('admin.beyond_edit', card_id=card.id) }}" class="btn-action btn-action--edit">Edit</a>
+        <form method="POST" action="{{ url_for('admin.beyond_delete', card_id=card.id) }}" style="display:inline"
+              onsubmit="return confirm('Delete {{ card.title }}?')">
+          <button type="submit" class="btn-action btn-action--delete">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
   </div>
   {% else %}
-    <p class="empty-state">No cards yet. The beyond page will show default cards until you add some here.</p>
+    <p class="empty-state">No cards yet. Add one above.</p>
   {% endif %}
 </div>
+
+<style>
+.beyond-admin-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.beyond-admin-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #18181b;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  cursor: default;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.beyond-admin-card.sortable-chosen {
+  border-color: #5e9bff;
+  box-shadow: 0 0 0 2px rgba(94,155,255,0.25);
+}
+.beyond-admin-card.sortable-ghost {
+  opacity: 0.4;
+}
+.beyond-admin-card__drag {
+  font-size: 1.25rem;
+  color: #52525b;
+  cursor: grab;
+  user-select: none;
+  padding: 0 0.25rem;
+  flex-shrink: 0;
+}
+.beyond-admin-card__drag:active { cursor: grabbing; }
+.beyond-admin-card__icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 2.5rem;
+  text-align: center;
+}
+.beyond-admin-card__body {
+  flex: 1;
+  min-width: 0;
+}
+.beyond-admin-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  margin: 0 0 0.2rem;
+}
+.beyond-admin-card__desc {
+  font-size: 0.82rem;
+  color: #71717a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.beyond-admin-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+#reorder-status {
+  font-size: 0.78rem;
+  color: #22c55e;
+  margin-top: 0.5rem;
+  min-height: 1.2em;
+  transition: opacity 0.3s;
+}
+</style>
+
+<div id="reorder-status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+(function () {
+  const el = document.getElementById('beyond-sortable');
+  if (!el) return;
+  const status = document.getElementById('reorder-status');
+
+  Sortable.create(el, {
+    handle: '.beyond-admin-card__drag',
+    animation: 180,
+    ghostClass: 'sortable-ghost',
+    chosenClass: 'sortable-chosen',
+    onEnd: function () {
+      const ids = Array.from(el.querySelectorAll('.beyond-admin-card')).map(c => parseInt(c.dataset.id));
+      status.textContent = 'Saving…';
+      fetch('/admin/api/beyond/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ ids: ids }),
+      })
+      .then(r => r.json())
+      .then(data => {
+        status.textContent = data.ok ? '✓ Order saved' : '✗ Save failed';
+        setTimeout(() => { status.textContent = ''; }, 2500);
+      })
+      .catch(() => { status.textContent = '✗ Save failed'; });
+    },
+  });
+}());
+</script>
 {% endblock %}
