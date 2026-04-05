@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit Card{% endblock %}
+{% block page_title %}Edit Beyond Card{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <form method="POST" action="{{ url_for('admin.beyond_edit', card_id=card.id) }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Icon (emoji) <span class="req">*</span></label>
+        <input type="text" name="icon" value="{{ card.icon }}" required maxlength="5" />
+      </div>
+      <div class="form-group">
+        <label>Title <span class="req">*</span></label>
+        <input type="text" name="title" value="{{ card.title }}" required />
+      </div>
+      <div class="form-group">
+        <label>Order</label>
+        <input type="number" name="order" value="{{ card.order }}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description <span class="req">*</span></label>
+      <textarea name="description" required rows="4">{{ card.description }}</textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Update Card</button>
+      <a href="{{ url_for('admin.beyond') }}" class="btn btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

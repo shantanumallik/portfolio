@@ -36,13 +36,31 @@ def experience():
 
 @public_bp.route("/beyond")
 def beyond():
-    return render_template("beyond.html")
+    from app.models.content import BeyondCard
+    cards = BeyondCard.query.order_by(BeyondCard.order).all()
+    return render_template("beyond.html", cards=cards)
 
 
 @public_bp.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "GET":
         return render_template("contact.html")
+
+    # ── Bot checks ────────────────────────────────────────────
+    # 1. Honeypot: bots fill the hidden "website" field
+    if request.form.get("website", "").strip():
+        flash("Message sent! I'll get back to you soon.", "success")
+        return redirect(url_for("public.contact"))
+
+    # 2. Timing: real humans take at least 4 seconds to fill a form
+    try:
+        form_time = int(request.form.get("_t", "0"))
+        elapsed = (int(__import__("time").time() * 1000) - form_time) / 1000
+        if elapsed < 4:
+            flash("Message sent! I'll get back to you soon.", "success")
+            return redirect(url_for("public.contact"))
+    except (ValueError, TypeError):
+        pass
 
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()

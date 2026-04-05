@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+{% block title %}Beyond the Code{% endblock %}
+{% block page_title %}Beyond the Code — Cards{% endblock %}
+
+{% block content %}
+<!-- Add Card -->
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>Add Card</h2>
+  </div>
+  <form method="POST" action="{{ url_for('admin.beyond_add') }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Icon (emoji) <span class="req">*</span></label>
+        <input type="text" name="icon" required placeholder="⛰" maxlength="5" value="🌍" />
+      </div>
+      <div class="form-group">
+        <label>Title <span class="req">*</span></label>
+        <input type="text" name="title" required placeholder="e.g. Hiking" />
+      </div>
+      <div class="form-group">
+        <label>Order</label>
+        <input type="number" name="order" value="{{ (cards | length) * 10 }}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description <span class="req">*</span></label>
+      <textarea name="description" required rows="3" placeholder="A short description of this interest..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Add Card</button>
+    </div>
+  </form>
+</div>
+
+<!-- Cards Table -->
+<div class="admin-section">
+  <div class="admin-section__header">
+    <h2>All Cards ({{ cards | length }})</h2>
+  </div>
+  {% if cards %}
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Icon</th><th>Title</th><th>Description</th><th>Order</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for card in cards %}
+        <tr>
+          <td style="font-size:1.5rem">{{ card.icon }}</td>
+          <td>{{ card.title }}</td>
+          <td>{{ card.description[:80] }}{% if card.description | length > 80 %}…{% endif %}</td>
+          <td>{{ card.order }}</td>
+          <td class="actions-cell">
+            <a href="{{ url_for('admin.beyond_edit', card_id=card.id) }}" class="btn-action btn-action--edit">Edit</a>
+            <form method="POST" action="{{ url_for('admin.beyond_delete', card_id=card.id) }}" style="display:inline"
+                  onsubmit="return confirm('Delete {{ card.title }}?')">
+              <button type="submit" class="btn-action btn-action--delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="empty-state">No cards yet. The beyond page will show default cards until you add some here.</p>
+  {% endif %}
+</div>
+{% endblock %}

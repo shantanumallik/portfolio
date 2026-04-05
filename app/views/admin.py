@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from app.controllers import auth as auth_ctrl
 from app.controllers import content as content_ctrl
-from app.models.content import Skill, Project, Experience
+from app.models.content import Skill, Project, Experience, BeyondCard
 
 admin_bp = Blueprint("admin", __name__, template_folder="../templates/admin")
 
@@ -340,3 +340,55 @@ def api_skill_item(skill_id):
         content_ctrl.update_skill(skill, data)
         return jsonify({"ok": True, "data": _skill_dict(skill)})
     return jsonify(_skill_dict(skill))
+
+
+# ── Beyond Cards ──────────────────────────────────────────────────────────────
+
+@admin_bp.route("/beyond")
+@login_required
+def beyond():
+    cards = BeyondCard.query.order_by(BeyondCard.order).all()
+    return render_template("admin/beyond.html", cards=cards)
+
+
+@admin_bp.route("/beyond/add", methods=["POST"])
+@login_required
+def beyond_add():
+    from app import db
+    card = BeyondCard(
+        icon=request.form.get("icon", "🌍").strip(),
+        title=request.form.get("title", "").strip(),
+        description=request.form.get("description", "").strip(),
+        order=int(request.form.get("order", 0)),
+    )
+    db.session.add(card)
+    db.session.commit()
+    flash("Card added.", "success")
+    return redirect(url_for("admin.beyond"))
+
+
+@admin_bp.route("/beyond/<int:card_id>/edit", methods=["GET", "POST"])
+@login_required
+def beyond_edit(card_id):
+    from app import db
+    card = BeyondCard.query.get_or_404(card_id)
+    if request.method == "POST":
+        card.icon = request.form.get("icon", card.icon).strip()
+        card.title = request.form.get("title", card.title).strip()
+        card.description = request.form.get("description", card.description).strip()
+        card.order = int(request.form.get("order", card.order))
+        db.session.commit()
+        flash("Card updated.", "success")
+        return redirect(url_for("admin.beyond"))
+    return render_template("admin/beyond_edit.html", card=card)
+
+
+@admin_bp.route("/beyond/<int:card_id>/delete", methods=["POST"])
+@login_required
+def beyond_delete(card_id):
+    from app import db
+    card = BeyondCard.query.get_or_404(card_id)
+    db.session.delete(card)
+    db.session.commit()
+    flash("Card deleted.", "success")
+    return redirect(url_for("admin.beyond"))

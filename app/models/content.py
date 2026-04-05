@@ -91,3 +91,16 @@ class ContactMessage(db.Model):
 
     def __repr__(self):
         return f"<ContactMessage from {self.name}>"
+
+
+class BeyondCard(db.Model):
+    __tablename__ = "beyond_cards"
+
+    id = db.Column(db.Integer, primary_key=True)
+    icon = db.Column(db.String(10), default="🌍")
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    order = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return f"<BeyondCard {self.title}>"

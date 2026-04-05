@@ -82,12 +82,26 @@
         </a>
         {% endif %}
       </div>
-      <p class="footer__copy">© 2026 · Shantanu Mallik · <a href="{{ url_for('admin.login') }}" class="footer__admin-link">Admin</a></p>
+      <p class="footer__copy">© 2026 · Shantanu Mallik</p>
     </div>
   </div>
 </footer>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+(function() {
+  document.querySelectorAll('a[href]').forEach(function(a) {
+    var href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto') || href.startsWith('http') || a.hasAttribute('target')) return;
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var dest = href;
+      document.body.classList.add('page-exit');
+      setTimeout(function() { window.location.href = dest; }, 180);
+    });
+  });
+})();
+</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

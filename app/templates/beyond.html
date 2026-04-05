@@ -68,6 +68,16 @@
 
     <div class="beyond-grid reveal">
 
+      {% if cards %}
+        {% for card in cards %}
+        <div class="beyond-card">
+          <div class="beyond-card__icon">{{ card.icon }}</div>
+          <h3 class="beyond-card__title">{{ card.title }}</h3>
+          <p class="beyond-card__desc">{{ card.description }}</p>
+        </div>
+        {% endfor %}
+      {% else %}
+
       <div class="beyond-card">
         <div class="beyond-card__icon">⛰</div>
         <h3 class="beyond-card__title">Hiking</h3>
@@ -91,6 +101,8 @@
         <h3 class="beyond-card__title">Wandering</h3>
         <p class="beyond-card__desc">Buddhist temples in Mussoorie, rooftop sessions in the hills, random detours with no agenda. Some of my best ideas arrived in places I had no reason to be.</p>
       </div>
+
+      {% endif %}
 
     </div>
   </div>

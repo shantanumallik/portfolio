@@ -30,6 +30,9 @@
       <a href="{{ url_for('admin.experience') }}" class="sidebar__link {% if request.endpoint in ['admin.experience', 'admin.experience_edit'] %}active{% endif %}">
         <span class="sidebar__icon">◎</span> Experience
       </a>
+      <a href="{{ url_for('admin.beyond') }}" class="sidebar__link {% if request.endpoint in ['admin.beyond', 'admin.beyond_edit'] %}active{% endif %}">
+        <span class="sidebar__icon">◬</span> Beyond the Code
+      </a>
       <a href="{{ url_for('admin.settings') }}" class="sidebar__link {% if request.endpoint == 'admin.settings' %}active{% endif %}">
         <span class="sidebar__icon">◻</span> Settings
       </a>
