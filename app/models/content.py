@@ -6,6 +6,7 @@ class About(db.Model):
     __tablename__ = "about"
 
     id = db.Column(db.Integer, primary_key=True)
+    hero_role = db.Column(db.String(150), default="Software Systems Engineer & PV Engineer.")
     hero_tagline = db.Column(db.String(120), nullable=False, default="Engineering Intelligence. Automating the Future.")
     hero_subtitle = db.Column(db.String(200), nullable=False, default="SVT/PV Engineer at Ciena")
     bio = db.Column(db.Text, nullable=False, default="")

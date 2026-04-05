@@ -14,7 +14,7 @@
   <div class="hero__split reveal">
     <div class="hero__text-col">
       <h1 class="hero__greeting">Hi, I'm Shantanu Mallik.</h1>
-      <h2 class="hero__role">Software Systems Engineer &amp; PV Engineer.</h2>
+      <h2 class="hero__role">{{ about.hero_role or "Software Systems Engineer &amp; PV Engineer." }}</h2>
       <p class="hero__subtitle">{{ about.hero_tagline or "I automate the hard parts, build systems that reason, and ship things that work at scale — from 1.6 Tbps network fabrics to agentic AI pipelines." }}</p>
       <div class="hero__ctas">
         <a href="/projects" class="btn btn--primary">View Work</a>

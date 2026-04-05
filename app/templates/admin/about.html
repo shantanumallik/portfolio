@@ -5,6 +5,10 @@
 {% block content %}
 <div class="admin-section">
   <form method="POST" action="{{ url_for('admin.about') }}" class="admin-form">
+    <div class="form-group">
+      <label>Hero Role Line</label>
+      <input type="text" name="hero_role" value="{{ about.hero_role }}" placeholder="Software Systems Engineer & PV Engineer." />
+    </div>
     <div class="form-row">
       <div class="form-group">
         <label>Hero Tagline</label>

@@ -12,6 +12,7 @@ def get_about():
 
 
 def update_about(about, data):
+    about.hero_role = data.get("hero_role", about.hero_role)
     about.hero_tagline = data.get("hero_tagline", about.hero_tagline)
     about.hero_subtitle = data.get("hero_subtitle", about.hero_subtitle)
     about.bio = data.get("bio", about.bio)
