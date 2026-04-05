@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Projects — Shantanu Mallik{% endblock %}
+
+{% block admin_extra_btns %}
+<button class="ie-admin-bar__btn ie-admin-bar__btn--primary" id="ie-toggle-edit">✏ Enable Editing</button>
+{% endblock %}
+
+{% block page_content %}
+
+<!-- ── Page Header ────────────────────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <p class="page-hero__kicker">WORK</p>
+    <h1 class="page-hero__title">Things built<br>and shipped.</h1>
+    <p class="page-hero__sub">A selection of projects across Python automation, Agentic AI, and SVT/PV engineering.</p>
+  </div>
+</div>
+
+<!-- ── Projects ───────────────────────────────────────────────────────────── -->
+<section class="section section--black" id="projects">
+  <div class="container">
+    {% if projects %}
+      <div class="projects-grid">
+        {% for project in projects %}
+        <article class="project-card reveal" style="--delay: {{ loop.index0 * 0.1 }}s" data-project-id="{{ project.id }}">
+          {% if current_user.is_authenticated %}
+          <div class="ie-card-controls">
+            <button class="ie-card-btn ie-card-btn--edit" data-action="edit-project" data-id="{{ project.id }}">✏</button>
+            <button class="ie-card-btn ie-card-btn--delete" data-action="delete-project" data-id="{{ project.id }}">✕</button>
+          </div>
+          {% endif %}
+          {% if project.image_url %}
+            <div class="project-card__image">
+              <img src="{{ project.image_url }}" alt="{{ project.title }}" loading="lazy" />
+            </div>
+          {% else %}
+            <div class="project-card__image project-card__image--placeholder">
+              <div class="project-card__placeholder-icon">&#128187;</div>
+            </div>
+          {% endif %}
+          <div class="project-card__body">
+            {% if project.is_featured %}
+              <span class="badge">Featured</span>
+            {% endif %}
+            <h3 class="project-card__title">{{ project.title }}</h3>
+            {% if project.tagline %}
+              <p class="project-card__tagline">{{ project.tagline }}</p>
+            {% endif %}
+            <p class="project-card__desc">{{ project.description }}</p>
+            {% if project.tech_list %}
+            <div class="project-card__tags">
+              {% for tech in project.tech_list %}
+                <span class="tag">{{ tech }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="project-card__links">
+              {% if project.github_url %}
+                <a href="{{ project.github_url }}" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">GitHub ↗</a>
+              {% endif %}
+              {% if project.demo_url %}
+                <a href="{{ project.demo_url }}" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Live Demo ↗</a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% if current_user.is_authenticated %}
+      <div class="ie-add-row" id="ie-add-project-row">
+        <button class="ie-add-btn" data-action="add-project">＋ Add Project</button>
+      </div>
+      {% endif %}
+    {% else %}
+      <div class="projects-grid">
+        <article class="project-card reveal">
+          <div class="project-card__image project-card__image--placeholder">
+            <div class="project-card__placeholder-icon">🤖</div>
+          </div>
+          <div class="project-card__body">
+            <span class="badge">Featured</span>
+            <h3 class="project-card__title">Agentic Test Orchestrator</h3>
+            <p class="project-card__tagline">AI-driven test case generation &amp; execution</p>
+            <p class="project-card__desc">A multi-agent system that analyzes system specs and automatically generates, prioritises, and executes SVT test suites — reducing manual test authoring time by 60%.</p>
+            <div class="project-card__tags">
+              <span class="tag">Python</span><span class="tag">LangGraph</span><span class="tag">LangChain</span><span class="tag">OpenAI</span>
+            </div>
+          </div>
+        </article>
+        <article class="project-card reveal" style="--delay: 0.1s">
+          <div class="project-card__image project-card__image--placeholder">
+            <div class="project-card__placeholder-icon">🔬</div>
+          </div>
+          <div class="project-card__body">
+            <h3 class="project-card__title">Network PV Automation Framework</h3>
+            <p class="project-card__tagline">End-to-end product validation pipeline</p>
+            <p class="project-card__desc">Modular Python framework for automated product validation of optical networking gear at Ciena, integrated with CI/CD pipelines for regression testing.</p>
+            <div class="project-card__tags">
+              <span class="tag">Python</span><span class="tag">Jenkins</span><span class="tag">CI/CD</span><span class="tag">NETCONF</span>
+            </div>
+          </div>
+        </article>
+        <article class="project-card reveal" style="--delay: 0.2s">
+          <div class="project-card__image project-card__image--placeholder">
+            <div class="project-card__placeholder-icon">💬</div>
+          </div>
+          <div class="project-card__body">
+            <h3 class="project-card__title">RAG Knowledge Agent</h3>
+            <p class="project-card__tagline">Retrieval-augmented assistant for internal docs</p>
+            <p class="project-card__desc">Built a conversational agent that ingests technical documentation and answers engineering questions in natural language using RAG and vector search.</p>
+            <div class="project-card__tags">
+              <span class="tag">Python</span><span class="tag">LangChain</span><span class="tag">Pinecone</span><span class="tag">FastAPI</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+{% endblock %}
+
+{% block extra_js %}
+{% if current_user.is_authenticated %}
+<div class="ie-overlay" id="ie-overlay" aria-hidden="true">
+  <div class="ie-modal" role="dialog" aria-labelledby="ie-modal-title">
+    <div class="ie-modal__header">
+      <h2 class="ie-modal__title" id="ie-modal-title">Edit</h2>
+      <button class="ie-modal__close" id="ie-modal-close" aria-label="Close">✕</button>
+    </div>
+    <form class="ie-modal__form" id="ie-modal-form" autocomplete="off" novalidate>
+      <div class="ie-modal__body" id="ie-modal-fields"></div>
+      <div class="ie-modal__footer">
+        <button type="button" class="btn btn--ghost btn--sm" id="ie-modal-cancel">Cancel</button>
+        <button type="submit" class="btn btn--primary btn--sm" id="ie-modal-save">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/inline-edit.js') }}"></script>
+{% endif %}
+{% endblock %}

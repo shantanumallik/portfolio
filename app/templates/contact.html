@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Contact — Shantanu Mallik{% endblock %}
+
+{% block page_content %}
+
+<!-- ── Page Header ────────────────────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <p class="page-hero__kicker">GET IN TOUCH</p>
+    <h1 class="page-hero__title">Let's build something<br>extraordinary.</h1>
+    <p class="page-hero__sub">Open to interesting collaborations, AI projects, and engineering discussions.</p>
+  </div>
+</div>
+
+<!-- ── Contact Form ───────────────────────────────────────────────────────── -->
+<section class="section section--black" id="contact">
+  <div class="container">
+    <div class="contact__grid">
+      <div class="contact__info reveal">
+        {% if about and about.email %}
+          <a href="mailto:{{ about.email }}" class="contact__email">{{ about.email }}</a>
+        {% else %}
+          <p class="contact__prompt">Open to interesting collaborations, AI projects, and engineering discussions.</p>
+        {% endif %}
+        {% if about and about.location %}
+          <p class="contact__location">📍 {{ about.location }}</p>
+        {% endif %}
+      </div>
+      <form class="contact__form reveal" method="POST" action="{{ url_for('public.contact') }}">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name <span class="req">*</span></label>
+            <input type="text" id="name" name="name" required placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email <span class="req">*</span></label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="What's this about?" />
+        </div>
+        <div class="form-group">
+          <label for="message">Message <span class="req">*</span></label>
+          <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project or idea..."></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+{% endblock %}

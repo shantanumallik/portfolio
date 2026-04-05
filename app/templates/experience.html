@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Career — Shantanu Mallik{% endblock %}
+
+{% block admin_extra_btns %}
+<button class="ie-admin-bar__btn ie-admin-bar__btn--primary" id="ie-toggle-edit">✏ Enable Editing</button>
+{% endblock %}
+
+{% block page_content %}
+
+<!-- ── Page Header ────────────────────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <p class="page-hero__kicker">CAREER</p>
+    <h1 class="page-hero__title">Where the<br>work happened.</h1>
+    <p class="page-hero__sub">Not a résumé. A timeline of the work, wins, and learnings that shaped me along the way.</p>
+  </div>
+</div>
+
+<!-- ── Experience / Timeline ─────────────────────────────────────────────── -->
+<section class="section section--black" id="experience">
+  <div class="container">
+    <div class="timeline">
+      {% if experience %}
+        {% for exp in experience %}
+        <div class="timeline__item reveal" data-exp-id="{{ exp.id }}">
+          {% if current_user.is_authenticated %}
+          <div class="ie-card-controls">
+            <button class="ie-card-btn ie-card-btn--edit" data-action="edit-exp" data-id="{{ exp.id }}">✏</button>
+            <button class="ie-card-btn ie-card-btn--delete" data-action="delete-exp" data-id="{{ exp.id }}">✕</button>
+          </div>
+          {% endif %}
+          <div class="timeline__dot"></div>
+          <div class="timeline__card">
+            <div class="timeline__meta">
+              <span class="timeline__company">{{ exp.company }}</span>
+              <span class="timeline__period">{{ exp.start_date }} — {{ exp.end_date }}</span>
+            </div>
+            <h3 class="timeline__role">{{ exp.role }}</h3>
+            <p class="timeline__desc">{{ exp.description }}</p>
+            {% if exp.tech_list %}
+            <div class="timeline__tags">
+              {% for tech in exp.tech_list %}
+                <span class="tag tag--sm">{{ tech }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+        {% if current_user.is_authenticated %}
+        <div class="ie-add-row" id="ie-add-exp-row">
+          <button class="ie-add-btn" data-action="add-exp">＋ Add Experience</button>
+        </div>
+        {% endif %}
+      {% else %}
+        <div class="timeline__item reveal">
+          <div class="timeline__dot"></div>
+          <div class="timeline__card">
+            <div class="timeline__meta">
+              <span class="timeline__company">Ciena</span>
+              <span class="timeline__period">Jan 2025 — Present</span>
+            </div>
+            <h3 class="timeline__role">SVT/PV Engineer</h3>
+            <p class="timeline__desc">System Verification &amp; Product Validation engineer focused on Python-based test automation and Agentic AI integration into the testing lifecycle. Designing intelligent test agents that reduce validation time and improve coverage across optical networking products.</p>
+            <div class="timeline__tags">
+              <span class="tag tag--sm">Python</span>
+              <span class="tag tag--sm">Agentic AI</span>
+              <span class="tag tag--sm">LangChain</span>
+              <span class="tag tag--sm">CI/CD</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+{% endblock %}
+
+{% block extra_js %}
+{% if current_user.is_authenticated %}
+<div class="ie-overlay" id="ie-overlay" aria-hidden="true">
+  <div class="ie-modal" role="dialog" aria-labelledby="ie-modal-title">
+    <div class="ie-modal__header">
+      <h2 class="ie-modal__title" id="ie-modal-title">Edit</h2>
+      <button class="ie-modal__close" id="ie-modal-close" aria-label="Close">✕</button>
+    </div>
+    <form class="ie-modal__form" id="ie-modal-form" autocomplete="off" novalidate>
+      <div class="ie-modal__body" id="ie-modal-fields"></div>
+      <div class="ie-modal__footer">
+        <button type="button" class="btn btn--ghost btn--sm" id="ie-modal-cancel">Cancel</button>
+        <button type="submit" class="btn btn--primary btn--sm" id="ie-modal-save">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/inline-edit.js') }}"></script>
+{% endif %}
+{% endblock %}

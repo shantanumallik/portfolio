@@ -10,22 +10,35 @@ public_bp = Blueprint("public", __name__)
 @public_bp.route("/")
 def index():
     about = content_ctrl.get_about()
+    return render_template("index.html", about=about)
+
+
+@public_bp.route("/about")
+def about():
     skills_by_category = content_ctrl.get_skills_by_category()
-    featured_skills = content_ctrl.get_featured_skills()
-    projects = content_ctrl.get_all_projects()
-    experience = content_ctrl.get_all_experience()
     return render_template(
-        "index.html",
-        about=about,
+        "about.html",
         skills_by_category=skills_by_category,
-        featured_skills=featured_skills,
-        projects=projects,
-        experience=experience,
     )
 
 
-@public_bp.route("/contact", methods=["POST"])
+@public_bp.route("/projects")
+def projects():
+    projects = content_ctrl.get_all_projects()
+    return render_template("projects.html", projects=projects)
+
+
+@public_bp.route("/experience")
+def experience():
+    experience = content_ctrl.get_all_experience()
+    return render_template("experience.html", experience=experience)
+
+
+@public_bp.route("/contact", methods=["GET", "POST"])
 def contact():
+    if request.method == "GET":
+        return render_template("contact.html")
+
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()
     subject = request.form.get("subject", "").strip()
@@ -33,7 +46,7 @@ def contact():
 
     if not name or not email or not message:
         flash("Please fill in all required fields.", "error")
-        return redirect(url_for("public.index") + "#contact")
+        return redirect(url_for("public.contact"))
 
     content_ctrl.save_contact_message(
         {"name": name, "email": email, "subject": subject, "message": message}
@@ -62,4 +75,4 @@ def contact():
         pass  # Don't break form submission if email fails
 
     flash("Message sent! I'll get back to you soon.", "success")
-    return redirect(url_for("public.index") + "#contact")
+    return redirect(url_for("public.contact"))

@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}About — Shantanu Mallik{% endblock %}
+
+{% block admin_extra_btns %}
+<button class="ie-admin-bar__btn ie-admin-bar__btn--primary" id="ie-toggle-edit">✏ Enable Editing</button>
+<button class="ie-admin-bar__btn" id="ie-edit-about">Edit About</button>
+{% endblock %}
+
+{% block page_content %}
+
+<!-- ── Page Header ────────────────────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <p class="page-hero__kicker">WHO AM I</p>
+    <h1 class="page-hero__title">The work, the stack,<br>and the person behind it.</h1>
+    <p class="page-hero__sub">Software Systems Engineer &amp; AI Builder. I automate the hard parts and build systems that reason.</p>
+  </div>
+</div>
+
+<!-- ── About ─────────────────────────────────────────────────────────────── -->
+<section class="section section--black" id="about">
+  <div class="container">
+    <div class="about__grid about__grid--no-photo">
+      <div class="about__bio reveal">
+        <p>{{ about.bio or "I automate the hard parts and build AI systems that reason. At Ciena, I ship Python-driven validation platforms and agentic failure-triage workflows that replace manual effort with intelligence — at 1.6 Tbps scale. I work at the intersection of systems engineering and AI: where reliability is non-negotiable and automation is the only logical path forward." }}</p>
+        <div class="about__links">
+          {% if about.linkedin_url %}
+            <a href="{{ about.linkedin_url }}" target="_blank" rel="noopener" class="icon-link">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn
+            </a>
+          {% endif %}
+          {% if about.github_url %}
+            <a href="{{ about.github_url }}" target="_blank" rel="noopener" class="icon-link">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              GitHub
+            </a>
+          {% endif %}
+          {% if about.resume_url %}
+            <a href="{{ about.resume_url }}" target="_blank" rel="noopener" class="btn btn--outline btn--sm">Download CV</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="about__stats reveal">
+        <div class="stat-card">
+          <span class="stat-card__number">5+</span>
+          <span class="stat-card__label">Years Python</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__number">1.6</span>
+          <span class="stat-card__label">Tbps Scale</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__number">AI</span>
+          <span class="stat-card__label">Agentic Systems</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__number">50k+</span>
+          <span class="stat-card__label">Users Served</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="skills-merged reveal">
+      <h3 class="skills-merged__heading">What's in the toolkit.</h3>
+      {% if skills_by_category %}
+        {% for category, skill_list in skills_by_category.items() %}
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">{{ category | title }}</h3>
+          <div class="skill-grid">
+            {% for skill in skill_list %}
+            <div class="skill-card" data-skill-id="{{ skill.id }}">
+              {% if current_user.is_authenticated %}
+              <div class="ie-card-controls ie-card-controls--skill">
+                <button class="ie-card-btn ie-card-btn--edit" data-action="edit-skill" data-id="{{ skill.id }}">✏</button>
+                <button class="ie-card-btn ie-card-btn--delete" data-action="delete-skill" data-id="{{ skill.id }}">✕</button>
+              </div>
+              {% endif %}
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ skill.name }}</span>
+                <span class="skill-card__pct">{{ skill.proficiency }}%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-bar__fill" data-width="{{ skill.proficiency }}"></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+        {% if current_user.is_authenticated %}
+        <div class="ie-add-row" id="ie-add-skill-row">
+          <button class="ie-add-btn" data-action="add-skill">＋ Add Skill</button>
+        </div>
+        {% endif %}
+      {% else %}
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">Languages &amp; Frameworks</h3>
+          <div class="skill-grid">
+            {% for s in [("Python", 95), ("REST APIs", 92), ("FastAPI", 80), ("Bash/Shell", 75)] %}
+            <div class="skill-card">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ s[0] }}</span>
+                <span class="skill-card__pct">{{ s[1] }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">Agentic AI</h3>
+          <div class="skill-grid">
+            {% for s in [("LangChain / LangGraph", 88), ("OpenAI API", 85), ("RAG Pipelines", 82), ("Prompt Engineering", 90)] %}
+            <div class="skill-card">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ s[0] }}</span>
+                <span class="skill-card__pct">{{ s[1] }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">SVT / PV Engineering</h3>
+          <div class="skill-grid">
+            {% for s in [("Automation", 95), ("CI/CD Integration", 85), ("Network Protocols", 80), ("Debugging &amp; Analysis", 90)] %}
+            <div class="skill-card">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ s[0] }}</span>
+                <span class="skill-card__pct">{{ s[1] }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ── Beyond The Code ────────────────────────────────────────────────────── -->
+<section class="section section--dark" id="beyond">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__kicker">BEYOND THE CODE</p>
+      <h2 class="section__title">When I'm not writing systems<br>that think, I'm out finding places that do.</h2>
+    </div>
+    <div class="scrapbook reveal">
+      <div class="scrapbook__grid">
+        <div class="scrapbook__item scrapbook__item--1">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_7068.jpg') }}" alt="Hiking" loading="lazy" />
+            <p class="scrapbook__caption">Peaks &amp; silence ↑</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--2">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2033.jpg') }}" alt="Mountains" loading="lazy" />
+            <p class="scrapbook__caption">Himalayan horizon</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--3">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2484.jpg') }}" alt="Guitar" loading="lazy" />
+            <p class="scrapbook__caption">Rooftop sessions 🎸</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--4">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2890.jpg') }}" alt="Buddha" loading="lazy" />
+            <p class="scrapbook__caption">Somewhere high up</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--5">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2494.jpg') }}" alt="Prayer wheel" loading="lazy" />
+            <p class="scrapbook__caption">Tibetan Buddhist Temple, Mussoorie</p>
+          </div>
+        </div>
+        <div class="scrapbook__item scrapbook__item--6">
+          <div class="scrapbook__polaroid">
+            <img src="{{ url_for('static', filename='images/gallery_IMG_2529.jpg') }}" alt="Prayer flags" loading="lazy" />
+            <p class="scrapbook__caption">Prayer flags, Mussoorie</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+{% endblock %}
+
+{% block extra_js %}
+{% if current_user.is_authenticated %}
+<div class="ie-overlay" id="ie-overlay" aria-hidden="true">
+  <div class="ie-modal" role="dialog" aria-labelledby="ie-modal-title">
+    <div class="ie-modal__header">
+      <h2 class="ie-modal__title" id="ie-modal-title">Edit</h2>
+      <button class="ie-modal__close" id="ie-modal-close" aria-label="Close">✕</button>
+    </div>
+    <form class="ie-modal__form" id="ie-modal-form" autocomplete="off" novalidate>
+      <div class="ie-modal__body" id="ie-modal-fields"></div>
+      <div class="ie-modal__footer">
+        <button type="button" class="btn btn--ghost btn--sm" id="ie-modal-cancel">Cancel</button>
+        <button type="submit" class="btn btn--primary btn--sm" id="ie-modal-save">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/inline-edit.js') }}"></script>
+{% endif %}
+{% endblock %}

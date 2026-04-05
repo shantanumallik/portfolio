@@ -26,4 +26,15 @@ def create_app(config_name="default"):
     with app.app_context():
         db.create_all()
 
+    # Make `about` available in all public templates
+    from app.controllers import content as content_ctrl
+
+    @app.context_processor
+    def inject_globals():
+        try:
+            about = content_ctrl.get_about()
+        except Exception:
+            about = None
+        return dict(about=about)
+
     return app
