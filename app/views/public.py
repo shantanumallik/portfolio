@@ -27,7 +27,8 @@ def about():
 @public_bp.route("/projects")
 def projects():
     projects = content_ctrl.get_all_projects()
-    return render_template("projects.html", projects=projects)
+    skills_by_category = content_ctrl.get_skills_by_category()
+    return render_template("projects.html", projects=projects, skills_by_category=skills_by_category)
 
 
 @public_bp.route("/experience")

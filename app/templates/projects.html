@@ -119,6 +119,89 @@
   </div>
 </section>
 
+<!-- ── Skills / Toolkit ──────────────────────────────────────────────────── -->
+<section class="section section--dark" id="skills">
+  <div class="container">
+    <div class="skills-merged reveal">
+      <h3 class="skills-merged__heading">What's in the toolkit.</h3>
+      {% if skills_by_category %}
+        {% for category, skill_list in skills_by_category.items() %}
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">{{ category | title }}</h3>
+          <div class="skill-grid">
+            {% for skill in skill_list %}
+            <div class="skill-card" data-skill-id="{{ skill.id }}">
+              {% if current_user.is_authenticated %}
+              <div class="ie-card-controls ie-card-controls--skill">
+                <button class="ie-card-btn ie-card-btn--edit" data-action="edit-skill" data-id="{{ skill.id }}">✏</button>
+                <button class="ie-card-btn ie-card-btn--delete" data-action="delete-skill" data-id="{{ skill.id }}">✕</button>
+              </div>
+              {% endif %}
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ skill.name }}</span>
+                <span class="skill-card__pct">{{ skill.proficiency }}%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-bar__fill" data-width="{{ skill.proficiency }}"></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+        {% if current_user.is_authenticated %}
+        <div class="ie-add-row" id="ie-add-skill-row">
+          <button class="ie-add-btn" data-action="add-skill">＋ Add Skill</button>
+        </div>
+        {% endif %}
+      {% else %}
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">Languages &amp; Frameworks</h3>
+          <div class="skill-grid">
+            {% for s in [("Python", 95), ("REST APIs", 92), ("FastAPI", 80), ("Bash/Shell", 75)] %}
+            <div class="skill-card">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ s[0] }}</span>
+                <span class="skill-card__pct">{{ s[1] }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">Agentic AI</h3>
+          <div class="skill-grid">
+            {% for s in [("LangChain / LangGraph", 88), ("OpenAI API", 85), ("RAG Pipelines", 82), ("Prompt Engineering", 90)] %}
+            <div class="skill-card">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ s[0] }}</span>
+                <span class="skill-card__pct">{{ s[1] }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">SVT / PV Engineering</h3>
+          <div class="skill-grid">
+            {% for s in [("Automation", 95), ("CI/CD Integration", 85), ("Network Protocols", 80), ("Debugging &amp; Analysis", 90)] %}
+            <div class="skill-card">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ s[0] }}</span>
+                <span class="skill-card__pct">{{ s[1] }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
 <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 {% endblock %}
 

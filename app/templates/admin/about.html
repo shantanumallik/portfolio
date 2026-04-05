@@ -5,6 +5,7 @@
 {% block content %}
 <div class="admin-section">
   <form method="POST" action="{{ url_for('admin.about') }}" class="admin-form">
+
     <div class="form-group">
       <label>Hero Role Line</label>
       <input type="text" name="hero_role" value="{{ about.hero_role }}" placeholder="Software Systems Engineer & PV Engineer." />
@@ -19,10 +20,7 @@
         <input type="text" name="hero_subtitle" value="{{ about.hero_subtitle }}" />
       </div>
     </div>
-    <div class="form-group">
-      <label>Bio</label>
-      <textarea name="bio" rows="5">{{ about.bio }}</textarea>
-    </div>
+
     <div class="form-row">
       <div class="form-group">
         <label>Email</label>
@@ -47,9 +45,22 @@
       <label>Resume / CV URL</label>
       <input type="url" name="resume_url" value="{{ about.resume_url }}" placeholder="https://..." />
     </div>
+
+    <hr style="border-color: rgba(255,255,255,0.07); margin: 1.5rem 0;" />
+
+    <div class="form-group">
+      <label>About Body Paragraphs</label>
+      <p style="font-size:0.78rem;color:#71717a;margin-bottom:0.6rem;">
+        Each block of text separated by a <strong>blank line</strong> becomes a paragraph.
+        The <strong>second block</strong> is displayed as a pull-quote callout.
+      </p>
+      <textarea name="bio" rows="14" placeholder="Paragraph one…&#10;&#10;Short callout sentence (shown as a quote).&#10;&#10;Paragraph three…">{{ about.bio }}</textarea>
+    </div>
+
     <div class="form-actions">
       <button type="submit" class="btn btn--primary">Save Changes</button>
     </div>
   </form>
 </div>
 {% endblock %}
+

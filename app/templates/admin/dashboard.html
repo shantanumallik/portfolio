@@ -42,17 +42,21 @@
     <span class="badge-count">{{ stats.messages }} total · {{ stats.unread }} unread</span>
   </div>
   <div class="table-wrap">
-    <table class="admin-table">
+    <table class="admin-table" id="msg-table">
       <thead>
         <tr>
+          <th></th>
           <th>Name</th><th>Email</th><th>Subject</th><th>Received</th><th>Status</th><th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for msg in messages %}
-        <tr class="{% if not msg.is_read %}row--unread{% endif %}">
+        <tr class="msg-row {% if not msg.is_read %}row--unread{% endif %}" data-msg-id="{{ msg.id }}">
+          <td>
+            <button class="btn-expand" aria-label="Expand message" onclick="toggleMsg({{ msg.id }})">▸</button>
+          </td>
           <td>{{ msg.name }}</td>
-          <td>{{ msg.email }}</td>
+          <td><a href="mailto:{{ msg.email }}" style="color:inherit">{{ msg.email }}</a></td>
           <td>{{ msg.subject or '—' }}</td>
           <td>{{ msg.received_at.strftime('%d %b %Y, %H:%M') }}</td>
           <td><span class="status-pill {% if msg.is_read %}status-pill--read{% else %}status-pill--unread{% endif %}">{{ 'Read' if msg.is_read else 'Unread' }}</span></td>
@@ -68,10 +72,59 @@
             </form>
           </td>
         </tr>
+        <tr class="msg-body-row" id="msg-body-{{ msg.id }}" style="display:none;">
+          <td colspan="7">
+            <div class="msg-body-wrap">
+              <p class="msg-body-text">{{ msg.message }}</p>
+            </div>
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+<style>
+  .btn-expand {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #71717a;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    line-height: 1;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .btn-expand.open {
+    color: #5e9bff;
+    border-color: #5e9bff;
+    transform: rotate(90deg);
+  }
+  .msg-body-row td { padding: 0 !important; }
+  .msg-body-wrap {
+    padding: 1rem 1.5rem 1.2rem 3.2rem;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .msg-body-text {
+    font-size: 0.85rem;
+    color: #a1a1aa;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
+<script>
+  function toggleMsg(id) {
+    const bodyRow = document.getElementById('msg-body-' + id);
+    const btn = document.querySelector('[data-msg-id="' + id + '"] .btn-expand');
+    const isOpen = bodyRow.style.display !== 'none';
+    bodyRow.style.display = isOpen ? 'none' : 'table-row';
+    btn.classList.toggle('open', !isOpen);
+  }
+</script>
 {% endif %}
 {% endblock %}

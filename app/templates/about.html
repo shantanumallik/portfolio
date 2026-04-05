@@ -30,17 +30,23 @@
       <!-- Text -->
       <div class="about-narrative__body">
         <div class="about-paras">
-          <p class="reveal" data-delay="0.1">I'm a Software Systems Engineer who's spent the last several years at the intersection of <span class="about-keyword">automation</span>, <span class="about-keyword">network validation</span>, and <span class="about-keyword">agentic AI</span>. At Ciena, I build the Python-driven platforms and intelligent triage workflows that make complex systems — operating at 1.6 Tbps — verifiable, reliable, and predictable at scale.</p>
-
-          <div class="about-callout reveal" data-delay="0.2">But the systems I build are only half the story.</div>
-
-          <p class="reveal" data-delay="0.3">The other half is the obsessive curiosity that drives me to keep going. I started in SVT and PV engineering — writing test frameworks, debugging protocol behavior, chasing down the exact failure condition in a 400-node fabric — and somewhere along the way became fascinated with what happens when you let <span class="about-keyword">language models reason</span> about those failures instead of humans. So I built that too.</p>
-
-          <p class="reveal" data-delay="0.4">When I'm away from the terminal, I'm usually somewhere in the mountains. <span class="about-keyword">Hiking</span> resets my brain in a way that nothing else does — there's something clarifying about problems with a single, obvious goal: get to the top. I also play <span class="about-keyword">guitar</span>, badly enough that it stays humbling and good enough that I keep at it. Both feel like debugging with better scenery.</p>
-
-          <p class="reveal" data-delay="0.5">I believe the most interesting work lives at the boundary between what's well-understood and what isn't. That's where I try to spend my time — whether I'm designing a failure-triage agent, tracing a packet through a broken pipeline, or figuring out why a chord progression doesn't resolve the way I expected.</p>
-
-          <p class="reveal" data-delay="0.6">If you're building something at that edge — or you're curious about the intersection of systems engineering and AI — I'd genuinely love to talk. Or check out <a href="/beyond" class="about-keyword">what I do when I'm not at a terminal</a>.</p>
+          {% if about.bio %}
+            {% set paras = about.bio.split('\n\n') %}
+            {% for para in paras %}
+              {% if loop.index == 2 %}
+                <div class="about-callout reveal" data-delay="{{ '0.' ~ loop.index }}">{{ para }}</div>
+              {% else %}
+                <p class="reveal" data-delay="{{ '0.' ~ loop.index }}">{{ para }}</p>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <p class="reveal" data-delay="0.1">I'm a Software Systems Engineer who's spent the last several years at the intersection of <span class="about-keyword">automation</span>, <span class="about-keyword">network validation</span>, and <span class="about-keyword">agentic AI</span>. At Ciena, I build the Python-driven platforms and intelligent triage workflows that make complex systems — operating at 1.6 Tbps — verifiable, reliable, and predictable at scale.</p>
+            <div class="about-callout reveal" data-delay="0.2">But the systems I build are only half the story.</div>
+            <p class="reveal" data-delay="0.3">The other half is the obsessive curiosity that drives me to keep going. I started in SVT and PV engineering — writing test frameworks, debugging protocol behavior, chasing down the exact failure condition in a 400-node fabric — and somewhere along the way became fascinated with what happens when you let <span class="about-keyword">language models reason</span> about those failures instead of humans. So I built that too.</p>
+            <p class="reveal" data-delay="0.4">When I'm away from the terminal, I'm usually somewhere in the mountains. <span class="about-keyword">Hiking</span> resets my brain in a way that nothing else does — there's something clarifying about problems with a single, obvious goal: get to the top. I also play <span class="about-keyword">guitar</span>, badly enough that it stays humbling and good enough that I keep at it. Both feel like debugging with better scenery.</p>
+            <p class="reveal" data-delay="0.5">I believe the most interesting work lives at the boundary between what's well-understood and what isn't. That's where I try to spend my time — whether I'm designing a failure-triage agent, tracing a packet through a broken pipeline, or figuring out why a chord progression doesn't resolve the way I expected.</p>
+            <p class="reveal" data-delay="0.6">If you're building something at that edge — or you're curious about the intersection of systems engineering and AI — I'd genuinely love to talk. Or check out <a href="/beyond" class="about-keyword">what I do when I'm not at a terminal</a>.</p>
+          {% endif %}
         </div>
 
         <div class="about-links-row">
@@ -59,135 +65,6 @@
           {% if about.resume_url %}
             <a href="{{ about.resume_url }}" target="_blank" rel="noopener" class="btn btn--outline btn--sm">Download CV</a>
           {% endif %}
-        </div>
-      </div>
-    </div>
-
-    <!-- Skills -->
-    <div class="skills-merged reveal">
-      <h3 class="skills-merged__heading">What's in the toolkit.</h3>
-      {% if skills_by_category %}
-        {% for category, skill_list in skills_by_category.items() %}
-        <div class="skill-group reveal">
-          <h3 class="skill-group__title">{{ category | title }}</h3>
-          <div class="skill-grid">
-            {% for skill in skill_list %}
-            <div class="skill-card" data-skill-id="{{ skill.id }}">
-              {% if current_user.is_authenticated %}
-              <div class="ie-card-controls ie-card-controls--skill">
-                <button class="ie-card-btn ie-card-btn--edit" data-action="edit-skill" data-id="{{ skill.id }}">✏</button>
-                <button class="ie-card-btn ie-card-btn--delete" data-action="delete-skill" data-id="{{ skill.id }}">✕</button>
-              </div>
-              {% endif %}
-              <div class="skill-card__header">
-                <span class="skill-card__name">{{ skill.name }}</span>
-                <span class="skill-card__pct">{{ skill.proficiency }}%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-bar__fill" data-width="{{ skill.proficiency }}"></div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% endfor %}
-        {% if current_user.is_authenticated %}
-        <div class="ie-add-row" id="ie-add-skill-row">
-          <button class="ie-add-btn" data-action="add-skill">＋ Add Skill</button>
-        </div>
-        {% endif %}
-      {% else %}
-        <div class="skill-group reveal">
-          <h3 class="skill-group__title">Languages &amp; Frameworks</h3>
-          <div class="skill-grid">
-            {% for s in [("Python", 95), ("REST APIs", 92), ("FastAPI", 80), ("Bash/Shell", 75)] %}
-            <div class="skill-card">
-              <div class="skill-card__header">
-                <span class="skill-card__name">{{ s[0] }}</span>
-                <span class="skill-card__pct">{{ s[1] }}%</span>
-              </div>
-              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="skill-group reveal">
-          <h3 class="skill-group__title">Agentic AI</h3>
-          <div class="skill-grid">
-            {% for s in [("LangChain / LangGraph", 88), ("OpenAI API", 85), ("RAG Pipelines", 82), ("Prompt Engineering", 90)] %}
-            <div class="skill-card">
-              <div class="skill-card__header">
-                <span class="skill-card__name">{{ s[0] }}</span>
-                <span class="skill-card__pct">{{ s[1] }}%</span>
-              </div>
-              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="skill-group reveal">
-          <h3 class="skill-group__title">SVT / PV Engineering</h3>
-          <div class="skill-grid">
-            {% for s in [("Automation", 95), ("CI/CD Integration", 85), ("Network Protocols", 80), ("Debugging &amp; Analysis", 90)] %}
-            <div class="skill-card">
-              <div class="skill-card__header">
-                <span class="skill-card__name">{{ s[0] }}</span>
-                <span class="skill-card__pct">{{ s[1] }}%</span>
-              </div>
-              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ s[1] }}"></div></div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-    </div>
-  </div>
-</section>
-
-<!-- ── Beyond The Code ────────────────────────────────────────────────────── -->
-<section class="section section--dark" id="beyond">
-  <div class="container">
-    <div class="section__header reveal">
-      <p class="section__kicker">BEYOND THE CODE</p>
-      <h2 class="section__title">When I'm not writing systems<br>that think, I'm out finding places that do.</h2>
-    </div>
-    <div class="scrapbook reveal">
-      <div class="scrapbook__grid">
-        <div class="scrapbook__item scrapbook__item--1">
-          <div class="scrapbook__polaroid">
-            <img src="{{ url_for('static', filename='images/gallery_IMG_7068.jpg') }}" alt="Hiking" loading="lazy" />
-            <p class="scrapbook__caption">Peaks &amp; silence ↑</p>
-          </div>
-        </div>
-        <div class="scrapbook__item scrapbook__item--2">
-          <div class="scrapbook__polaroid">
-            <img src="{{ url_for('static', filename='images/gallery_IMG_2033.jpg') }}" alt="Mountains" loading="lazy" />
-            <p class="scrapbook__caption">Himalayan horizon</p>
-          </div>
-        </div>
-        <div class="scrapbook__item scrapbook__item--3">
-          <div class="scrapbook__polaroid">
-            <img src="{{ url_for('static', filename='images/gallery_IMG_2484.jpg') }}" alt="Guitar" loading="lazy" />
-            <p class="scrapbook__caption">Rooftop sessions 🎸</p>
-          </div>
-        </div>
-        <div class="scrapbook__item scrapbook__item--4">
-          <div class="scrapbook__polaroid">
-            <img src="{{ url_for('static', filename='images/gallery_IMG_2890.jpg') }}" alt="Buddha" loading="lazy" />
-            <p class="scrapbook__caption">Somewhere high up</p>
-          </div>
-        </div>
-        <div class="scrapbook__item scrapbook__item--5">
-          <div class="scrapbook__polaroid">
-            <img src="{{ url_for('static', filename='images/gallery_IMG_2494.jpg') }}" alt="Prayer wheel" loading="lazy" />
-            <p class="scrapbook__caption">Tibetan Buddhist Temple, Mussoorie</p>
-          </div>
-        </div>
-        <div class="scrapbook__item scrapbook__item--6">
-          <div class="scrapbook__polaroid">
-            <img src="{{ url_for('static', filename='images/gallery_IMG_2529.jpg') }}" alt="Prayer flags" loading="lazy" />
-            <p class="scrapbook__caption">Prayer flags, Mussoorie</p>
-          </div>
         </div>
       </div>
     </div>
