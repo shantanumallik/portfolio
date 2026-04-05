@@ -224,6 +224,60 @@ a { color: inherit; text-decoration: none; }
 .stat-card__number { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .stat-card__label  { font-size: 13px; font-weight: 500; color: var(--text-muted); }
 
+/* ── About Page — Narrative Style (imvinay-style) ─────────── */
+.about-page-title {
+  padding-top: calc(var(--nav-h) + 80px);
+  padding-bottom: 56px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.about-page-title__inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.about-page-title__h1 {
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; color: var(--text);
+}
+
+.about-narrative {
+  display: grid; grid-template-columns: 400px 1fr;
+  gap: 72px; align-items: start; padding-bottom: 64px;
+}
+.about-narrative__photo {
+  border-radius: 16px; overflow: hidden;
+  aspect-ratio: 3 / 4; border: 1px solid var(--border);
+  box-shadow: 0 0 40px rgba(94,155,255,0.08);
+  position: sticky; top: calc(var(--nav-h) + 24px);
+}
+.about-narrative__photo img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;
+}
+.about-narrative__body { display: flex; flex-direction: column; }
+.about-paras p {
+  font-size: 1.05rem; line-height: 1.82; color: var(--text-muted);
+  margin-bottom: 28px; text-align: justify;
+}
+.about-callout {
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  padding: 18px 24px; border-radius: 0 10px 10px 0;
+  margin: 4px 0 28px; font-size: 1.05rem; font-weight: 600;
+  line-height: 1.6; color: var(--text);
+}
+.about-keyword {
+  color: var(--accent); font-weight: 600;
+  text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-color: rgba(94,155,255,0.4);
+}
+.about-links-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 8px; }
+
+@media (max-width: 960px) {
+  .about-narrative { grid-template-columns: 1fr; gap: 36px; }
+  .about-narrative__photo { max-width: 300px; margin: 0 auto; position: static; }
+}
+@media (max-width: 768px) {
+  .about-page-title { padding-top: calc(var(--nav-h) + 48px); padding-bottom: 36px; }
+  .about-paras p { text-align: left; font-size: 1rem; }
+}
+
 /* ── Skills ───────────────────────────────────────────────── */
 .skills-merged { margin-top: 72px; }
 .skills-merged__heading { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text); margin-bottom: 40px; }

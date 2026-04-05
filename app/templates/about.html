@@ -9,22 +9,42 @@
 
 {% block page_content %}
 
-<!-- ── Page Header ────────────────────────────────────────────────────────── -->
-<div class="page-hero">
-  <div class="page-hero__inner">
-    <p class="page-hero__kicker">WHO AM I</p>
-    <h1 class="page-hero__title">The work, the stack,<br>and the person behind it.</h1>
-    <p class="page-hero__sub">Software Systems Engineer &amp; AI Builder. I automate the hard parts and build systems that reason.</p>
+<!-- ── Page Title ─────────────────────────────────────────────────────────── -->
+<div class="about-page-title">
+  <div class="about-page-title__inner">
+    <h1 class="about-page-title__h1">Building systems that scale,<br>learning everything in between.</h1>
   </div>
 </div>
 
 <!-- ── About ─────────────────────────────────────────────────────────────── -->
 <section class="section section--black" id="about">
   <div class="container">
-    <div class="about__grid about__grid--no-photo">
-      <div class="about__bio reveal">
-        <p>{{ about.bio or "I automate the hard parts and build AI systems that reason. At Ciena, I ship Python-driven validation platforms and agentic failure-triage workflows that replace manual effort with intelligence — at 1.6 Tbps scale. I work at the intersection of systems engineering and AI: where reliability is non-negotiable and automation is the only logical path forward." }}</p>
-        <div class="about__links">
+    <div class="about-narrative reveal">
+
+      <!-- Photo -->
+      <div class="about-narrative__photo">
+        <img src="{{ url_for('static', filename='images/shantanu.jpg') }}"
+             alt="Shantanu Mallik"
+             onerror="this.parentElement.style.background='var(--surface2)'" />
+      </div>
+
+      <!-- Text -->
+      <div class="about-narrative__body">
+        <div class="about-paras">
+          <p>I'm a Software Systems Engineer who's spent the last several years at the intersection of <span class="about-keyword">automation</span>, <span class="about-keyword">network validation</span>, and <span class="about-keyword">agentic AI</span>. At Ciena, I build the Python-driven platforms and intelligent triage workflows that make complex systems — operating at 1.6 Tbps — verifiable, reliable, and predictable at scale.</p>
+
+          <div class="about-callout">But the systems I build are only half the story.</div>
+
+          <p>The other half is the obsessive curiosity that drives me to keep going. I started in SVT and PV engineering — writing test frameworks, debugging protocol behavior, chasing down the exact failure condition in a 400-node fabric — and somewhere along the way became fascinated with what happens when you let <span class="about-keyword">language models reason</span> about those failures instead of humans. So I built that too.</p>
+
+          <p>When I'm away from the terminal, I'm usually somewhere in the mountains. <span class="about-keyword">Hiking</span> resets my brain in a way that nothing else does — there's something clarifying about problems with a single, obvious goal: get to the top. I also play <span class="about-keyword">guitar</span>, badly enough that it stays humbling and good enough that I keep at it. Both feel like debugging with better scenery.</p>
+
+          <p>I believe the most interesting work lives at the boundary between what's well-understood and what isn't. That's where I try to spend my time — whether I'm designing a failure-triage agent, tracing a packet through a broken pipeline, or figuring out why a chord progression doesn't resolve the way I expected.</p>
+
+          <p>If you're building something at that edge — or you're curious about the intersection of systems engineering and AI — I'd genuinely love to talk.</p>
+        </div>
+
+        <div class="about-links-row">
           {% if about.linkedin_url %}
             <a href="{{ about.linkedin_url }}" target="_blank" rel="noopener" class="icon-link">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -40,24 +60,6 @@
           {% if about.resume_url %}
             <a href="{{ about.resume_url }}" target="_blank" rel="noopener" class="btn btn--outline btn--sm">Download CV</a>
           {% endif %}
-        </div>
-      </div>
-      <div class="about__stats reveal">
-        <div class="stat-card">
-          <span class="stat-card__number">5+</span>
-          <span class="stat-card__label">Years Python</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-card__number">1.6</span>
-          <span class="stat-card__label">Tbps Scale</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-card__number">AI</span>
-          <span class="stat-card__label">Agentic Systems</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-card__number">50k+</span>
-          <span class="stat-card__label">Users Served</span>
         </div>
       </div>
     </div>
