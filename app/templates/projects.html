@@ -23,7 +23,16 @@
     {% if projects %}
       <div class="projects-grid">
         {% for project in projects %}
-        <article class="project-card reveal" style="--delay: {{ loop.index0 * 0.1 }}s" data-project-id="{{ project.id }}">
+        <article class="project-card project-card--clickable reveal" style="--delay: {{ loop.index0 * 0.1 }}s"
+                 data-project-id="{{ project.id }}"
+                 data-title="{{ project.title }}"
+                 data-tagline="{{ project.tagline or '' }}"
+                 data-desc="{{ project.description }}"
+                 data-tech="{{ project.tech_stack or '' }}"
+                 data-github="{{ project.github_url or '' }}"
+                 data-demo="{{ project.demo_url or '' }}"
+                 data-image="{{ project.image_url or '' }}"
+                 data-featured="{{ 'true' if project.is_featured else 'false' }}">
           {% if current_user.is_authenticated %}
           <div class="ie-card-controls">
             <button class="ie-card-btn ie-card-btn--edit" data-action="edit-project" data-id="{{ project.id }}">✏</button>
@@ -206,6 +215,157 @@
 {% endblock %}
 
 {% block extra_js %}
+<style>
+.project-card--clickable { cursor: pointer; transition: transform 0.18s, box-shadow 0.18s; }
+.project-card--clickable:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(94,155,255,0.13); }
+
+.proj-overlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(0,0,0,0.72);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.proj-overlay.open { opacity: 1; pointer-events: all; }
+.proj-modal {
+  background: #18181b;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  width: 100%; max-width: 660px;
+  max-height: 88vh; overflow-y: auto;
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.22s cubic-bezier(.2,.8,.2,1);
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+}
+.proj-overlay.open .proj-modal { transform: none; }
+.proj-modal__topbar {
+  display: flex; justify-content: flex-end;
+  padding: 1rem 1rem 0;
+  position: sticky; top: 0;
+  background: linear-gradient(#18181b 80%, transparent);
+  z-index: 2;
+}
+.proj-modal__close {
+  background: rgba(255,255,255,0.08); border: none; color: #f4f4f5;
+  width: 2rem; height: 2rem; border-radius: 50%; font-size: 0.85rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; flex-shrink: 0;
+}
+.proj-modal__close:hover { background: rgba(255,255,255,0.18); }
+.proj-modal__hero {
+  width: 100%; aspect-ratio: 16/6;
+  background: #09090b;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem; overflow: hidden;
+  margin-top: -2.5rem;
+}
+.proj-modal__hero img { width: 100%; height: 100%; object-fit: cover; }
+.proj-modal__body { padding: 1.5rem 2rem 2rem; }
+.proj-modal__badge {
+  display: inline-block; background: #5e9bff; color: #fff;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 0.2em 0.75em;
+  border-radius: 4px; margin-bottom: 0.9rem;
+}
+.proj-modal__title { font-size: 1.5rem; font-weight: 700; color: #f4f4f5; margin: 0 0 0.35rem; line-height: 1.2; }
+.proj-modal__tagline { font-size: 0.95rem; color: #a1a1aa; margin: 0 0 1.25rem; }
+.proj-modal__desc { font-size: 0.96rem; color: #d4d4d8; line-height: 1.75; margin: 0 0 1.5rem; }
+.proj-modal__tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.75rem; }
+.proj-modal__links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+</style>
+
+<!-- Project Detail Modal -->
+<div class="proj-overlay" id="proj-overlay" aria-hidden="true">
+  <div class="proj-modal" id="proj-modal" role="dialog" aria-labelledby="proj-modal-title">
+    <div class="proj-modal__topbar">
+      <button class="proj-modal__close" id="proj-modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="proj-modal__hero" id="proj-modal-hero"></div>
+    <div class="proj-modal__body">
+      <div id="proj-modal-badge"></div>
+      <h2 class="proj-modal__title" id="proj-modal-title"></h2>
+      <p class="proj-modal__tagline" id="proj-modal-tagline"></p>
+      <p class="proj-modal__desc" id="proj-modal-desc"></p>
+      <div class="proj-modal__tag-row" id="proj-modal-tags"></div>
+      <div class="proj-modal__links" id="proj-modal-links"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById('proj-overlay');
+  if (!overlay) return;
+  var closeBtn = document.getElementById('proj-modal-close');
+
+  function esc(s) {
+    return String(s || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function openModal(d) {
+    // hero image or icon
+    var heroEl = document.getElementById('proj-modal-hero');
+    heroEl.innerHTML = d.image
+      ? '<img src="' + esc(d.image) + '" alt="' + esc(d.title) + '" />'
+      : '<span>💻</span>';
+    // badge
+    document.getElementById('proj-modal-badge').innerHTML =
+      d.featured === 'true' ? '<span class="proj-modal__badge">Featured</span>' : '';
+    document.getElementById('proj-modal-title').textContent = d.title || '';
+    document.getElementById('proj-modal-tagline').textContent = d.tagline || '';
+    document.getElementById('proj-modal-desc').textContent = d.desc || '';
+    // tech tags
+    document.getElementById('proj-modal-tags').innerHTML =
+      (d.tech || '').split(',').filter(Boolean).map(function (t) {
+        return '<span class="tag">' + esc(t.trim()) + '</span>';
+      }).join('');
+    // links
+    var linksEl = document.getElementById('proj-modal-links');
+    linksEl.innerHTML = '';
+    if (d.github) linksEl.innerHTML += '<a href="' + esc(d.github) + '" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">GitHub ↗</a>';
+    if (d.demo)   linksEl.innerHTML += '<a href="' + esc(d.demo)   + '" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Live Demo ↗</a>';
+
+    overlay.classList.add('open');
+    overlay.removeAttribute('aria-hidden');
+    document.body.style.overflow = 'hidden';
+    // scroll modal to top
+    document.getElementById('proj-modal').scrollTop = 0;
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  document.querySelectorAll('.project-card--clickable').forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      // don't intercept admin buttons, links, or buttons inside the card
+      if (e.target.closest('.ie-card-controls') ||
+          e.target.closest('.project-card__links') ||
+          e.target.closest('a') ||
+          e.target.closest('button')) return;
+      openModal(card.dataset);
+    });
+  });
+}());
+</script>
+
 {% if current_user.is_authenticated %}
 <div class="ie-overlay" id="ie-overlay" aria-hidden="true">
   <div class="ie-modal" role="dialog" aria-labelledby="ie-modal-title">

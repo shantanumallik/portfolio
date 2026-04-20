@@ -100,6 +100,10 @@
       setTimeout(function() { window.location.href = dest; }, 180);
     });
   });
+  // Remove page-exit when browser restores page from bfcache (back/forward button)
+  window.addEventListener('pageshow', function(e) {
+    document.body.classList.remove('page-exit');
+  });
 })();
 </script>
 {% block extra_js %}{% endblock %}
