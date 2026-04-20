@@ -24,8 +24,7 @@
       <div class="projects-grid">
         {% for project in projects %}
         <article class="project-card project-card--clickable reveal" style="--delay: {{ loop.index0 * 0.1 }}s"
-                 data-project-id="{{ project.id }}"
-                 data-project='{{ {"title": project.title, "tagline": project.tagline or "", "desc": project.description, "tech": project.tech_stack or "", "github": project.github_url or "", "demo": project.demo_url or "", "image": project.image_url or "", "featured": project.is_featured} | tojson }}'>
+                 data-project-id="{{ project.id }}">
           {% if current_user.is_authenticated %}
           <div class="ie-card-controls">
             <button class="ie-card-btn ie-card-btn--edit" data-action="edit-project" data-id="{{ project.id }}">✏</button>
@@ -291,6 +290,13 @@
 </div>
 
 <script>
+// Project data lookup — keyed by id
+var __PROJ = {};
+(function() {
+  var list = {{ projects_list | tojson }};
+  list.forEach(function(p) { __PROJ[p.id] = p; });
+}());
+
 (function () {
   var overlay = document.getElementById('proj-overlay');
   if (!overlay) return;
@@ -303,32 +309,27 @@
   }
 
   function openModal(d) {
-    // hero image or icon
+    if (!d) return;
     var heroEl = document.getElementById('proj-modal-hero');
     heroEl.innerHTML = d.image
       ? '<img src="' + esc(d.image) + '" alt="' + esc(d.title) + '" />'
       : '<span>💻</span>';
-    // badge
     document.getElementById('proj-modal-badge').innerHTML =
       d.featured ? '<span class="proj-modal__badge">Featured</span>' : '';
     document.getElementById('proj-modal-title').textContent = d.title || '';
     document.getElementById('proj-modal-tagline').textContent = d.tagline || '';
     document.getElementById('proj-modal-desc').textContent = d.desc || '';
-    // tech tags
     document.getElementById('proj-modal-tags').innerHTML =
       (d.tech || '').split(',').filter(Boolean).map(function (t) {
         return '<span class="tag">' + esc(t.trim()) + '</span>';
       }).join('');
-    // links
     var linksEl = document.getElementById('proj-modal-links');
     linksEl.innerHTML = '';
     if (d.github) linksEl.innerHTML += '<a href="' + esc(d.github) + '" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">GitHub ↗</a>';
     if (d.demo)   linksEl.innerHTML += '<a href="' + esc(d.demo)   + '" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Live Demo ↗</a>';
-
     overlay.classList.add('open');
     overlay.removeAttribute('aria-hidden');
     document.body.style.overflow = 'hidden';
-    // scroll modal to top
     document.getElementById('proj-modal').scrollTop = 0;
   }
 
@@ -352,9 +353,8 @@
           e.target.closest('.project-card__links') ||
           e.target.closest('a') ||
           e.target.closest('button')) return;
-      try {
-        openModal(JSON.parse(card.dataset.project));
-      } catch(err) { console.error('Modal data parse error', err); }
+      var pid = parseInt(card.dataset.projectId, 10);
+      openModal(__PROJ[pid]);
     });
   });
 }());

@@ -28,7 +28,20 @@ def about():
 def projects():
     projects = content_ctrl.get_all_projects()
     skills_by_category = content_ctrl.get_skills_by_category()
-    return render_template("projects.html", projects=projects, skills_by_category=skills_by_category)
+    projects_list = [{
+        'id': p.id,
+        'title': p.title,
+        'tagline': p.tagline or '',
+        'desc': p.description,
+        'tech': p.tech_stack or '',
+        'github': p.github_url or '',
+        'demo': p.demo_url or '',
+        'image': p.image_url or '',
+        'featured': p.is_featured,
+    } for p in projects]
+    return render_template("projects.html", projects=projects,
+                           skills_by_category=skills_by_category,
+                           projects_list=projects_list)
 
 
 @public_bp.route("/experience")
