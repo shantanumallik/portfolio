@@ -25,14 +25,7 @@
         {% for project in projects %}
         <article class="project-card project-card--clickable reveal" style="--delay: {{ loop.index0 * 0.1 }}s"
                  data-project-id="{{ project.id }}"
-                 data-title="{{ project.title }}"
-                 data-tagline="{{ project.tagline or '' }}"
-                 data-desc="{{ project.description }}"
-                 data-tech="{{ project.tech_stack or '' }}"
-                 data-github="{{ project.github_url or '' }}"
-                 data-demo="{{ project.demo_url or '' }}"
-                 data-image="{{ project.image_url or '' }}"
-                 data-featured="{{ 'true' if project.is_featured else 'false' }}">
+                 data-project='{{ {"title": project.title, "tagline": project.tagline or "", "desc": project.description, "tech": project.tech_stack or "", "github": project.github_url or "", "demo": project.demo_url or "", "image": project.image_url or "", "featured": project.is_featured} | tojson }}'>
           {% if current_user.is_authenticated %}
           <div class="ie-card-controls">
             <button class="ie-card-btn ie-card-btn--edit" data-action="edit-project" data-id="{{ project.id }}">✏</button>
@@ -317,7 +310,7 @@
       : '<span>💻</span>';
     // badge
     document.getElementById('proj-modal-badge').innerHTML =
-      d.featured === 'true' ? '<span class="proj-modal__badge">Featured</span>' : '';
+      d.featured ? '<span class="proj-modal__badge">Featured</span>' : '';
     document.getElementById('proj-modal-title').textContent = d.title || '';
     document.getElementById('proj-modal-tagline').textContent = d.tagline || '';
     document.getElementById('proj-modal-desc').textContent = d.desc || '';
@@ -355,12 +348,13 @@
 
   document.querySelectorAll('.project-card--clickable').forEach(function (card) {
     card.addEventListener('click', function (e) {
-      // don't intercept admin buttons, links, or buttons inside the card
       if (e.target.closest('.ie-card-controls') ||
           e.target.closest('.project-card__links') ||
           e.target.closest('a') ||
           e.target.closest('button')) return;
-      openModal(card.dataset);
+      try {
+        openModal(JSON.parse(card.dataset.project));
+      } catch(err) { console.error('Modal data parse error', err); }
     });
   });
 }());
