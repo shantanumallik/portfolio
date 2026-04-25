@@ -7,7 +7,7 @@ class About(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     hero_role = db.Column(db.String(150), default="Software Systems Engineer & PV Engineer.")
-    hero_tagline = db.Column(db.String(120), nullable=False, default="Engineering Intelligence. Automating the Future.")
+    hero_tagline = db.Column(db.String(300), nullable=False, default="Engineering Intelligence. Automating the Future.")
     hero_subtitle = db.Column(db.String(200), nullable=False, default="SVT/PV Engineer at Ciena")
     bio = db.Column(db.Text, nullable=False, default="")
     location = db.Column(db.String(100), default="")
