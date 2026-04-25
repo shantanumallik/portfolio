@@ -18,7 +18,7 @@ def _db_url():
     # Re-encode the password so special chars like @ don't break URL parsing.
     # Strategy: the last @ separates userinfo from host; everything before it
     # (after the scheme) is "user:raw_password".
-    if "postgresql" in url:
+    if "postgresql" in url or "cockroachdb" in url:
         scheme_end = url.index("://") + 3
         scheme = url[:scheme_end]
         rest = url[scheme_end:]
@@ -32,6 +32,11 @@ def _db_url():
                 raw_password = userinfo[colon + 1:]
                 encoded_password = quote(raw_password, safe="")
                 url = f"{scheme}{user}:{encoded_password}@{hostpart}"
+
+    # CockroachDB needs its own dialect to parse the version string correctly
+    if "cockroachlabs.cloud" in url:
+        url = url.replace("postgresql+psycopg2://", "cockroachdb+psycopg2://", 1)
+        url = url.replace("postgresql://", "cockroachdb+psycopg2://", 1)
 
     return url
 
