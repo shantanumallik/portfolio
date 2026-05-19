@@ -131,7 +131,7 @@
           <h3 class="skill-group__title">{{ category | title }}</h3>
           <div class="skill-grid">
             {% for skill in skill_list %}
-            <div class="skill-card" data-skill-id="{{ skill.id }}">
+            <div class="skill-card reveal" style="--delay: {{ loop.index0 * 0.05 }}s" data-skill-id="{{ skill.id }}">
               {% if current_user.is_authenticated %}
               <div class="ie-card-controls ie-card-controls--skill">
                 <button class="ie-card-btn ie-card-btn--edit" data-action="edit-skill" data-id="{{ skill.id }}">✏</button>
@@ -160,7 +160,7 @@
           <h3 class="skill-group__title">Languages &amp; Frameworks</h3>
           <div class="skill-grid">
             {% for s in [("Python", 95), ("REST APIs", 92), ("FastAPI", 80), ("Bash/Shell", 75)] %}
-            <div class="skill-card">
+            <div class="skill-card reveal" style="--delay: {{ loop.index0 * 0.05 }}s">
               <div class="skill-card__header">
                 <span class="skill-card__name">{{ s[0] }}</span>
                 <span class="skill-card__pct">{{ s[1] }}%</span>
@@ -174,7 +174,7 @@
           <h3 class="skill-group__title">Agentic AI</h3>
           <div class="skill-grid">
             {% for s in [("LangChain / LangGraph", 88), ("OpenAI API", 85), ("RAG Pipelines", 82), ("Prompt Engineering", 90)] %}
-            <div class="skill-card">
+            <div class="skill-card reveal" style="--delay: {{ loop.index0 * 0.05 }}s">
               <div class="skill-card__header">
                 <span class="skill-card__name">{{ s[0] }}</span>
                 <span class="skill-card__pct">{{ s[1] }}%</span>
@@ -188,7 +188,7 @@
           <h3 class="skill-group__title">SVT / PV Engineering</h3>
           <div class="skill-grid">
             {% for s in [("Automation", 95), ("CI/CD Integration", 85), ("Network Protocols", 80), ("Debugging &amp; Analysis", 90)] %}
-            <div class="skill-card">
+            <div class="skill-card reveal" style="--delay: {{ loop.index0 * 0.05 }}s">
               <div class="skill-card__header">
                 <span class="skill-card__name">{{ s[0] }}</span>
                 <span class="skill-card__pct">{{ s[1] }}%</span>
