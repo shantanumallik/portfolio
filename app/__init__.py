@@ -10,9 +10,22 @@ login_manager.login_message = "Please log in to access the admin panel."
 login_manager.login_message_category = "info"
 
 
+def _mask_db_uri(uri):
+    if not uri or "://" not in uri or "@" not in uri:
+        return uri
+    scheme, rest = uri.split("://", 1)
+    userinfo, host = rest.split("@", 1)
+    if ":" in userinfo:
+        user, _ = userinfo.split(":", 1)
+        return f"{scheme}://{user}:****@{host}"
+    return uri
+
+
 def create_app(config_name="default"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    safe_db_uri = _mask_db_uri(app.config.get("SQLALCHEMY_DATABASE_URI"))
+    app.logger.info("Database URI after normalization: %s", safe_db_uri)
 
     db.init_app(app)
     login_manager.init_app(app)
