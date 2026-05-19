@@ -78,6 +78,31 @@
   loop();
 })();
 
+/* ── In-page nav active state & hash on load ───────────────────────────── */
+(function initAnchorNav() {
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const navLinks = Array.from(document.querySelectorAll('.nav__links a'));
+  if (!sections.length || !navLinks.length) return;
+
+  function onScroll() {
+    const y = window.scrollY + window.innerHeight * 0.3;
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.offsetTop <= y) current = s;
+    }
+    navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current.id));
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Activate correct link on load (including direct hash links)
+  if (location.hash) {
+    const id = location.hash.replace('#','');
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 120);
+  }
+  onScroll();
+})();
+
 /* ── Nav Scroll Effect ────────────────────────────────────── */
 (function initNav() {
   const nav = document.getElementById('main-nav');

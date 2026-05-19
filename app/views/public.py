@@ -12,7 +12,19 @@ public_bp = Blueprint("public", __name__)
 @public_bp.route("/")
 def index():
     about = content_ctrl.get_about()
-    return render_template("index.html", about=about)
+    projects = content_ctrl.get_all_projects()
+    skills_by_category = content_ctrl.get_skills_by_category()
+    experience = content_ctrl.get_all_experience()
+    from app.models.content import BeyondCard
+    cards = BeyondCard.query.order_by(BeyondCard.order).all()
+    return render_template(
+        "index.html",
+        about=about,
+        projects=projects,
+        skills_by_category=skills_by_category,
+        experience=experience,
+        beyond_cards=cards,
+    )
 
 
 @public_bp.route("/about")

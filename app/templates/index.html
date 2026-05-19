@@ -17,8 +17,8 @@
       <h2 class="hero__role">{{ about.hero_role or "Software Systems Engineer &amp; PV Engineer." }}</h2>
       <p class="hero__subtitle">{{ about.hero_tagline or "I automate the hard parts, build systems that reason, and ship things that work at scale — from 1.6 Tbps network fabrics to agentic AI pipelines." }}</p>
       <div class="hero__ctas">
-        <a href="/projects" class="btn btn--primary">View Work</a>
-        <a href="/contact" class="btn btn--ghost">Get In Touch</a>
+          <a href="#projects" class="btn btn--primary">View Work</a>
+          <a href="#contact" class="btn btn--ghost">Get In Touch</a>
       </div>
     </div>
     <div class="hero__photo-col">
@@ -32,10 +32,192 @@
   </div>
 </section>
 
+<!-- ── Projects (single-page) ───────────────────────────────────────────── -->
+<section class="section section--black" id="projects">
+  <div class="container">
+    {% if projects %}
+      <div class="projects-grid">
+        {% for project in projects %}
+        <article class="project-card project-card--clickable reveal" style="--delay: {{ loop.index0 * 0.1 }}s"
+                 data-project-id="{{ project.id }}">
+          {% if current_user.is_authenticated %}
+          <div class="ie-card-controls">
+            <button class="ie-card-btn ie-card-btn--edit" data-action="edit-project" data-id="{{ project.id }}">✏</button>
+            <button class="ie-card-btn ie-card-btn--delete" data-action="delete-project" data-id="{{ project.id }}">✕</button>
+          </div>
+          {% endif %}
+          {% if project.image_url %}
+            <div class="project-card__image">
+              <img src="{{ project.image_url }}" alt="{{ project.title }}" loading="lazy" />
+            </div>
+          {% else %}
+            <div class="project-card__image project-card__image--placeholder">
+              <div class="project-card__placeholder-icon">&#128187;</div>
+            </div>
+          {% endif %}
+          <div class="project-card__body">
+            {% if project.is_featured %}
+              <span class="badge">Featured</span>
+            {% endif %}
+            <h3 class="project-card__title">{{ project.title }}</h3>
+            {% if project.tagline %}
+              <p class="project-card__tagline">{{ project.tagline }}</p>
+            {% endif %}
+            <p class="project-card__desc">{{ project.description }}</p>
+            {% if project.tech_list %}
+            <div class="project-card__tags">
+              {% for tech in project.tech_list %}
+                <span class="tag">{{ tech }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="project-card__links">
+              {% if project.github_url %}
+                <a href="{{ project.github_url }}" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">GitHub ↗</a>
+              {% endif %}
+              {% if project.demo_url %}
+                <a href="{{ project.demo_url }}" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Live Demo ↗</a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="projects-grid">
+        <article class="project-card reveal">
+          <div class="project-card__image project-card__image--placeholder">
+            <div class="project-card__placeholder-icon">🤖</div>
+          </div>
+          <div class="project-card__body">
+            <span class="badge">Featured</span>
+            <h3 class="project-card__title">Agentic Test Orchestrator</h3>
+            <p class="project-card__tagline">AI-driven test case generation &amp; execution</p>
+            <p class="project-card__desc">A multi-agent system that analyzes system specs and automatically generates, prioritises, and executes SVT test suites — reducing manual test authoring time by 60%.</p>
+            <div class="project-card__tags">
+              <span class="tag">Python</span><span class="tag">LangGraph</span><span class="tag">LangChain</span><span class="tag">OpenAI</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ── Skills / Toolkit (single-page) ───────────────────────────────────── -->
+<section class="section section--dark" id="skills">
+  <div class="container">
+    <div class="skills-merged reveal">
+      <h3 class="skills-merged__heading">What's in the toolkit.</h3>
+      {% if skills_by_category %}
+        {% for category, skill_list in skills_by_category.items() %}
+        <div class="skill-group reveal">
+          <h3 class="skill-group__title">{{ category | title }}</h3>
+          <div class="skill-grid">
+            {% for skill in skill_list %}
+            <div class="skill-card reveal" style="--delay: {{ loop.index0 * 0.05 }}s" data-skill-id="{{ skill.id }}">
+              <div class="skill-card__header">
+                <span class="skill-card__name">{{ skill.name }}</span>
+                <span class="skill-card__pct">{{ skill.proficiency }}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar__fill" data-width="{{ skill.proficiency }}"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ── Experience (single-page) ───────────────────────────────────────── -->
+<section class="section section--black" id="experience">
+  <div class="container">
+    <div class="timeline">
+      {% if experience %}
+        {% for exp in experience %}
+        <div class="timeline__item reveal" data-exp-id="{{ exp.id }}">
+          <div class="timeline__dot"></div>
+          <div class="timeline__card">
+            <div class="timeline__meta">
+              <span class="timeline__company">{{ exp.company }}</span>
+              <span class="timeline__period">{{ exp.start_date }} — {{ exp.end_date }}</span>
+            </div>
+            <h3 class="timeline__role">{{ exp.role }}</h3>
+            <p class="timeline__desc">{{ exp.description }}</p>
+            {% if exp.tech_list %}
+            <div class="timeline__tags">
+              {% for tech in exp.tech_list %}
+                <span class="tag tag--sm">{{ tech }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ── Beyond / Other Work (single-page) ───────────────────────────────── -->
+<section class="section section--dark" id="beyond">
+  <div class="container">
+    <div class="scrapbook">
+      {% for card in beyond_cards %}
+      <div class="scrapbook__item reveal">
+        <h4 class="scrapbook__title">{{ card.title }}</h4>
+        <p class="scrapbook__desc">{{ card.body }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact (single-page) ───────────────────────────────────────────── -->
+<section class="section section--black" id="contact">
+  <div class="container">
+    <h2 class="section__title reveal">Get In Touch</h2>
+    <form action="{{ url_for('public.contact') }}" method="POST" class="contact-form reveal">
+      <div class="form-row">
+        <input type="text" name="name" placeholder="Your name" required />
+        <input type="email" name="email" placeholder="Your email" required />
+      </div>
+      <div class="form-row">
+        <input type="text" name="subject" placeholder="Subject" />
+      </div>
+      <div class="form-row">
+        <textarea name="message" rows="6" placeholder="Message" required></textarea>
+      </div>
+      <div style="display:none;"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+      <input type="hidden" name="_t" value="{{ (now()|int * 1000) if false else '' }}" />
+      <button type="submit" class="btn btn--primary">Send Message</button>
+    </form>
+  </div>
+</section>
+
 <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 {% endblock %}
 
 {% block extra_js %}
+<script>
+// Smooth-scroll for in-page nav links
+document.addEventListener('DOMContentLoaded', function () {
+  function smoothScrollTo(hash) {
+    var el = document.getElementById(hash.replace('#',''));
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', hash);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      smoothScrollTo(a.getAttribute('href'));
+    });
+  });
+});
+</script>
 {% if current_user.is_authenticated %}
 <div class="ie-overlay" id="ie-overlay" aria-hidden="true">
   <div class="ie-modal" role="dialog" aria-labelledby="ie-modal-title">

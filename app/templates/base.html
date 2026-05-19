@@ -32,11 +32,11 @@
     <a class="nav__logo" href="/"><span class="nav__logo-slash">//</span><span class="nav__logo-name">Shantanu Mallik</span></a>
     <ul class="nav__links">
       <li><a href="/" {% if request.endpoint == 'public.index' %}class="active"{% endif %}>Home</a></li>
-      <li><a href="/about" {% if request.endpoint == 'public.about' %}class="active"{% endif %}>Who Am I</a></li>
-      <li><a href="/projects" {% if request.endpoint == 'public.projects' %}class="active"{% endif %}>Work</a></li>
-      <li><a href="/experience" {% if request.endpoint == 'public.experience' %}class="active"{% endif %}>Career</a></li>
-      <li><a href="/beyond" {% if request.endpoint == 'public.beyond' %}class="active"{% endif %}>Beyond the Code</a></li>
-      <li><a href="/contact" {% if request.endpoint == 'public.contact' %}class="active"{% endif %}>Get In Touch</a></li>
+      <li><a href="/#about" {% if request.endpoint == 'public.about' %}class="active"{% endif %}>Who Am I</a></li>
+      <li><a href="/#projects" {% if request.endpoint == 'public.projects' %}class="active"{% endif %}>Work</a></li>
+      <li><a href="/#experience" {% if request.endpoint == 'public.experience' %}class="active"{% endif %}>Career</a></li>
+      <li><a href="/#beyond" {% if request.endpoint == 'public.beyond' %}class="active"{% endif %}>Beyond the Code</a></li>
+      <li><a href="/#contact" {% if request.endpoint == 'public.contact' %}class="active"{% endif %}>Get In Touch</a></li>
     </ul>
     <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -64,11 +64,11 @@
     <div class="footer__inner">
       <nav class="footer__nav">
         <a href="/">Home</a>
-        <a href="/about">Who Am I</a>
-        <a href="/projects">Work</a>
-        <a href="/experience">Career</a>
-        <a href="/beyond">Beyond the Code</a>
-        <a href="/contact">Get In Touch</a>
+        <a href="/#about">Who Am I</a>
+        <a href="/#projects">Work</a>
+        <a href="/#experience">Career</a>
+        <a href="/#beyond">Beyond the Code</a>
+        <a href="/#contact">Get In Touch</a>
       </nav>
       <div class="footer__social">
         {% if about and about.linkedin_url %}
