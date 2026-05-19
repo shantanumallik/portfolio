@@ -18,10 +18,15 @@ def _db_url():
         url = url.replace("cockroachdb://", "cockroachdb+psycopg2://", 1)
 
     # CockroachDB Cloud endpoints may still be returned as PostgreSQL-style URLs.
-    if "cockroachlabs.cloud" in url and url.startswith("postgresql+"):
+    if "cockroachlabs.cloud" in url and url.startswith("postgresql+" ):
         url = url.replace("postgresql+psycopg2://", "cockroachdb+psycopg2://", 1)
     elif "cockroachlabs.cloud" in url and url.startswith("postgresql://"):
         url = url.replace("postgresql://", "cockroachdb+psycopg2://", 1)
+
+    # CockroachDB Cloud on Render may not have a local root.crt path available.
+    if "cockroachlabs.cloud" in url and "sslrootcert=" not in url:
+        sep = "&" if "?" in url else "?"
+        url = f"{url}{sep}sslrootcert=system"
 
     # Re-encode the password so special chars like @ don't break URL parsing.
     # Strategy: the last @ separates userinfo from host; everything before it
