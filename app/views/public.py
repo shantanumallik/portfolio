@@ -38,43 +38,27 @@ def about():
 
 @public_bp.route("/projects")
 def projects():
-    projects = content_ctrl.get_all_projects()
-    skills_by_category = content_ctrl.get_skills_by_category()
-    projects_list = [{
-        'id': p.id,
-        'title': p.title,
-        'tagline': p.tagline or '',
-        'desc': p.description,
-        'tech': p.tech_stack or '',
-        'github': p.github_url or '',
-        'demo': p.demo_url or '',
-        'image': p.image_url or '',
-        'featured': p.is_featured,
-    } for p in projects]
-    return render_template("projects.html", projects=projects,
-                           skills_by_category=skills_by_category,
-                           projects_list=projects_list)
+    # Redirect to single-page index anchor so old routes still work
+    return redirect(url_for('public.index') + '#projects')
 
 
 @public_bp.route("/experience")
 def experience():
-    experience = content_ctrl.get_all_experience()
-    return render_template("experience.html", experience=experience)
+    return redirect(url_for('public.index') + '#experience')
 
 
 @public_bp.route("/beyond")
 def beyond():
-    from app.models.content import BeyondCard
-    cards = BeyondCard.query.order_by(BeyondCard.order).all()
-    return render_template("beyond.html", cards=cards)
+    return redirect(url_for('public.index') + '#beyond')
 
 
 @public_bp.route("/contact", methods=["GET", "POST"])
 def contact():
     recaptcha_site_key = os.environ.get("RECAPTCHA_SITE_KEY", "")
 
+    # For GET requests, redirect to the single-page contact section
     if request.method == "GET":
-        return render_template("contact.html", recaptcha_site_key=recaptcha_site_key)
+        return redirect(url_for('public.index') + '#contact')
 
     # ── Bot checks ────────────────────────────────────────────
     # 1. Honeypot
