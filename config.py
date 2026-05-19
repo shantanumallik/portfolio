@@ -1,5 +1,6 @@
 import os
 from urllib.parse import quote
+import certifi
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -26,7 +27,9 @@ def _db_url():
     # CockroachDB Cloud on Render may not have a local root.crt path available.
     if "cockroachlabs.cloud" in url and "sslrootcert=" not in url:
         sep = "&" if "?" in url else "?"
-        url = f"{url}{sep}sslrootcert=system"
+        # Use certifi's CA bundle so Render doesn't need a local root.crt file.
+        cert_path = quote(certifi.where(), safe="")
+        url = f"{url}{sep}sslrootcert={cert_path}"
 
     # Re-encode the password so special chars like @ don't break URL parsing.
     # Strategy: the last @ separates userinfo from host; everything before it
