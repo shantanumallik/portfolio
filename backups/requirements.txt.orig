@@ -10,4 +10,3 @@ gunicorn>=21.2.0
 psycopg2-binary>=2.9.9
 certifi
 sqlalchemy-cockroachdb
-Flask-Caching>=2.0.0

@@ -1,0 +1,58 @@
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from app.controllers import content as content_ctrl
+
+public_bp = Blueprint("public", __name__)
+
+
+@public_bp.route("/")
+def index():
+    about = content_ctrl.get_about()
+    projects = content_ctrl.get_all_projects()
+    skills_by_category = content_ctrl.get_skills_by_category()
+    experience = content_ctrl.get_all_experience()
+    from app.models.content import BeyondCard
+    cards = BeyondCard.query.order_by(BeyondCard.order).all()
+    return render_template(
+        "index.html",
+        about=about,
+        projects=projects,
+        skills_by_category=skills_by_category,
+        experience=experience,
+        beyond_cards=cards,
+    )
+
+
+@public_bp.route("/about")
+def about():
+    skills_by_category = content_ctrl.get_skills_by_category()
+    return render_template(
+        "about.html",
+        skills_by_category=skills_by_category,
+    )
+
+
+@public_bp.route("/projects")
+def projects():
+    # Redirect to single-page index anchor so old routes still work
+    return redirect(url_for('public.index') + '#projects')
+
+
+@public_bp.route("/experience")
+def experience():
+    return redirect(url_for('public.index') + '#experience')
+
+
+@public_bp.route("/beyond")
+def beyond():
+    return redirect(url_for('public.index') + '#beyond')
+
+
+@public_bp.route("/contact", methods=["GET", "POST"])
+def contact():
+    recaptcha_site_key = os.environ.get("RECAPTCHA_SITE_KEY", "")
+
+    # For GET requests, redirect to the single-page contact section
+    if request.method == "GET":
+        return redirect(url_for('public.index') + '#contact')
+
+    # ... remainder omitted for brevity in backup ...

@@ -1,12 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_caching import Cache
 from config import config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-cache = Cache()
 login_manager.login_view = "admin.login"
 login_manager.login_message = "Please log in to access the admin panel."
 login_manager.login_message_category = "info"
@@ -30,9 +28,6 @@ def create_app(config_name="default"):
     app.logger.info("Database URI after normalization: %s", safe_db_uri)
 
     db.init_app(app)
-    # Initialize caching (simple/in-memory by default). Can be configured
-    # via environment variables to use Redis or another backend.
-    cache.init_app(app)
     login_manager.init_app(app)
 
     from app.views.public import public_bp
@@ -49,19 +44,8 @@ def create_app(config_name="default"):
 
     @app.context_processor
     def inject_globals():
-        # Provide `about` to templates, cached for a short TTL to reduce DB load.
         try:
-            about = None
-            c = app.extensions.get('cache')
-            if c:
-                about = c.get('about')
-            if about is None:
-                about = content_ctrl.get_about()
-                if c:
-                    try:
-                        c.set('about', about, timeout=app.config.get('CACHE_DEFAULT_TIMEOUT', 300))
-                    except Exception:
-                        pass
+            about = content_ctrl.get_about()
         except Exception:
             about = None
         return dict(about=about)

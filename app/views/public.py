@@ -3,7 +3,7 @@ import json as _json
 import threading
 import urllib.request
 import urllib.parse
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from app.controllers import content as content_ctrl
 
 public_bp = Blueprint("public", __name__)
@@ -11,19 +11,66 @@ public_bp = Blueprint("public", __name__)
 
 @public_bp.route("/")
 def index():
-    about = content_ctrl.get_about()
-    projects = content_ctrl.get_all_projects()
+    # `about` is provided by the app context processor (cached there).
+    # Cache heavier lists to reduce DB load under frequent pings.
+    c = current_app.extensions.get('cache')
+
+    projects = None
+    projects_list = None
+    if c:
+        projects = c.get('projects')
+        projects_list = c.get('projects_list')
+
+    if projects is None:
+        projects = content_ctrl.get_all_projects()
+        if c:
+            try:
+                c.set('projects', projects, timeout=current_app.config.get('CACHE_DEFAULT_TIMEOUT', 300))
+            except Exception:
+                pass
+
+    if projects_list is None:
+        projects_list = []
+        for p in projects:
+            projects_list.append({
+                "id": p.id,
+                "title": p.title,
+                "tagline": p.tagline,
+                "desc": p.description,
+                "tech": p.tech_stack or "",
+                "image": p.image_url or "",
+                "github": p.github_url or "",
+                "demo": p.demo_url or "",
+                "featured": bool(p.is_featured),
+            })
+        if c:
+            try:
+                c.set('projects_list', projects_list, timeout=current_app.config.get('CACHE_DEFAULT_TIMEOUT', 300))
+            except Exception:
+                pass
+
     skills_by_category = content_ctrl.get_skills_by_category()
     experience = content_ctrl.get_all_experience()
+
     from app.models.content import BeyondCard
-    cards = BeyondCard.query.order_by(BeyondCard.order).all()
+    beyond_cards = None
+    if c:
+        beyond_cards = c.get('beyond_cards')
+    if beyond_cards is None:
+        beyond_cards = BeyondCard.query.order_by(BeyondCard.order).all()
+        if c:
+            try:
+                c.set('beyond_cards', beyond_cards, timeout=current_app.config.get('CACHE_DEFAULT_TIMEOUT', 300))
+            except Exception:
+                pass
+
     return render_template(
         "index.html",
-        about=about,
         projects=projects,
+        projects_list=projects_list,
         skills_by_category=skills_by_category,
         experience=experience,
-        beyond_cards=cards,
+        beyond_cards=beyond_cards,
     )
 
 
@@ -34,6 +81,12 @@ def about():
         "about.html",
         skills_by_category=skills_by_category,
     )
+
+
+@public_bp.route('/healthz')
+def healthz():
+    # Lightweight health endpoint that does not touch the database.
+    return ('OK', 200)
 
 
 @public_bp.route("/projects")
